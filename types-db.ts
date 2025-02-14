@@ -15,3 +15,12 @@ export interface Billboards{
     createdAt? : Timestamp;
     updateAt? : Timestamp;
 }
+
+export interface Category {
+    id: string,
+    billboardId: string,
+    billboardLabel: string,
+    name : string,
+    createdAt? : Timestamp;
+    updateAt? : Timestamp;
+}

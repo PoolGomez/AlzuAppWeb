@@ -1,38 +1,45 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { CellImage } from "./cell-image"
+
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
-import { CellAction } from "./cell-actions"
+import { CellAction } from "./cell-action"
+import { CellImage } from "./cell-image"
 
-export type BillboardColumns = {
+
+export type CategoryColumns = {
     id: string,
-    label: string,
-    imageUrl: string,
+    billboardLabel: string,
+    name: string,
     createdAt: string,
 }
 
-export const columns: ColumnDef<BillboardColumns>[] = [
+export const columns: ColumnDef<CategoryColumns>[] = [
+    {
+        accessorKey: "name",
+        header: ({column}) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={()=> column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Category
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        }
+      },
+  
   {
-    accessorKey: "imageUrl",
-    header: "Image",
-    cell: ({row}) => {
-        const {imageUrl} = row.original
-        return (
-            <CellImage imageUrl={imageUrl} />
-        )
-    }
-  },
-  {
-    accessorKey: "label",
+    accessorKey: "billboardLabel",
     header: ({column}) => {
         return (
             <Button
                 variant="ghost"
                 onClick={()=> column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Name
+                Billboard
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         )
