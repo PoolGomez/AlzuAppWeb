@@ -32,3 +32,11 @@ export interface Size {
     createdAt? : Timestamp;
     updateAt? : Timestamp;
 }
+
+export interface Kitchen {
+    id: string;
+    name: string;
+    value: string;
+    createdAt? : Timestamp;
+    updateAt? : Timestamp;
+}
