@@ -1,20 +1,20 @@
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Kitchen } from "@/types-db";
+import { Cuisine } from "@/types-db";
 import { format } from "date-fns"
-import { KitchenColumns } from "./components/columns";
-import { KitchenClient } from "./components/client";
+import { CuisineColumns } from "./components/columns";
+import { CuisineClient } from "./components/client";
 
 
-const KitchensPage = async ({params}:{params:{storeId: string}}) => {
+const CuisinesPage = async ({params}:{params:{storeId: string}}) => {
 
-    const kitchensData = (
+    const cuisinesData = (
         await getDocs(
-            collection(doc(db, "stores", params.storeId), "kitchens")
+            collection(doc(db, "stores", params.storeId), "cuisines")
         )
-    ).docs.map(doc => doc.data()) as Kitchen[];
+    ).docs.map(doc => doc.data()) as Cuisine[];
 
-    const formattedKitchens : KitchenColumns[] = kitchensData.map(item => ({
+    const formattedCuisines : CuisineColumns[] = cuisinesData.map(item => ({
         id: item.id,
         name: item.name,
         value: item.value,
@@ -26,11 +26,11 @@ const KitchensPage = async ({params}:{params:{storeId: string}}) => {
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">
-                <KitchenClient data={formattedKitchens}/>
+                <CuisineClient data={formattedCuisines}/>
             </div>
             
         </div>
     )
 }
 
-export default KitchensPage;
+export default CuisinesPage;

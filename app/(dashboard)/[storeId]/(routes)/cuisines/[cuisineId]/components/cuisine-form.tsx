@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Kitchen } from "@/types-db";
+import { Cuisine } from "@/types-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Trash } from "lucide-react";
@@ -22,8 +22,8 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
-interface KitchenFormProps {
-  initialData: Kitchen;
+interface CuisineFormProps {
+  initialData: Cuisine;
 }
 
 const formSchema = z.object({
@@ -31,9 +31,9 @@ const formSchema = z.object({
   value: z.string().min(1),
 });
 
-export const KitchenForm = ({
+export const CuisineForm = ({
   initialData
-}: KitchenFormProps) => {
+}: CuisineFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData,
@@ -44,10 +44,10 @@ export const KitchenForm = ({
   const params = useParams();
   const router = useRouter();
 
-  const title = initialData ? "Edit Kitchen" : "Create Kitchen";
-  const description = initialData ? "Edit a Kitchen" : "Add new Kitchen";
-  const toastMessage = initialData ? "Kitchen updated" : "Kitchen Created";
-  const action = initialData ? "Save Changes" : "Create Kitchen";
+  const title = initialData ? "Edit Cuisine" : "Create Cuisine";
+  const description = initialData ? "Edit a Cuisine" : "Add new Cuisine";
+  const toastMessage = initialData ? "Cuisine updated" : "Cuisine Created";
+  const action = initialData ? "Save Changes" : "Create Cuisine";
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -55,14 +55,14 @@ export const KitchenForm = ({
 
       if (initialData) {
         await axios.patch(
-          `/api/${params.storeId}/kitchens/${params.kitchenId}`,
+          `/api/${params.storeId}/cuisines/${params.cuisineId}`,
           data
         );
       } else {
-        await axios.post(`/api/${params.storeId}/kitchens`, data);
+        await axios.post(`/api/${params.storeId}/cuisines`, data);
       }
       toast.success(toastMessage);
-      router.push(`/${params.storeId}/kitchens`);
+      router.push(`/${params.storeId}/cuisines`);
 
     } catch (error) {
       console.log(error);
@@ -78,12 +78,12 @@ export const KitchenForm = ({
       setIsLoading(true);
 
       await axios.delete(
-        `/api/${params.storeId}/kitchens/${params.kitchenId}`
+        `/api/${params.storeId}/cuisines/${params.cuisineId}`
       );
 
-      toast.success("Kitchen Removed");
+      toast.success("Cuisine Removed");
       router.refresh();
-      router.push(`/${params.storeId}/kitchens`);
+      router.push(`/${params.storeId}/cuisines`);
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
@@ -129,7 +129,7 @@ export const KitchenForm = ({
                   <FormControl>
                     <Input
                       disabled={isLoading}
-                      placeholder="Your kitchen name..."
+                      placeholder="Your cuisine name..."
                       {...field}
                     />
                   </FormControl>
@@ -147,7 +147,7 @@ export const KitchenForm = ({
                   <FormControl>
                     <Input
                       disabled={isLoading}
-                      placeholder="Your kitchen value..."
+                      placeholder="Your cuisine value..."
                       {...field}
                     />
                   </FormControl>
