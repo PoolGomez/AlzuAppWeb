@@ -9,18 +9,26 @@ export interface Store {
 }
 
 export interface Billboards{
-    id: string,
-    label : string,
-    imageUrl : string,
+    id: string;
+    label : string;
+    imageUrl : string;
     createdAt? : Timestamp;
     updateAt? : Timestamp;
 }
 
 export interface Category {
-    id: string,
-    billboardId: string,
-    billboardLabel: string,
-    name : string,
+    id: string;
+    billboardId: string;
+    billboardLabel: string;
+    name : string;
+    createdAt? : Timestamp;
+    updateAt? : Timestamp;
+}
+
+export interface Size {
+    id: string;
+    name: string;
+    value: string;
     createdAt? : Timestamp;
     updateAt? : Timestamp;
 }

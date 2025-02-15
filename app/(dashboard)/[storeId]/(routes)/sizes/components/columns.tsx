@@ -1,20 +1,19 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
 import { CellAction } from "./cell-action"
 
 
-export type CategoryColumns = {
+export type SizeColumns = {
     id: string,
-    billboardLabel: string,
     name: string,
+    value: string,
     createdAt: string,
 }
 
-export const columns: ColumnDef<CategoryColumns>[] = [
+export const columns: ColumnDef<SizeColumns>[] = [
     {
         accessorKey: "name",
         header: ({column}) => {
@@ -23,7 +22,7 @@ export const columns: ColumnDef<CategoryColumns>[] = [
                     variant="ghost"
                     onClick={()=> column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Category
+                    Name
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
@@ -31,14 +30,14 @@ export const columns: ColumnDef<CategoryColumns>[] = [
       },
   
   {
-    accessorKey: "billboardLabel",
+    accessorKey: "value",
     header: ({column}) => {
         return (
             <Button
                 variant="ghost"
                 onClick={()=> column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Billboard
+                Value
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         )
