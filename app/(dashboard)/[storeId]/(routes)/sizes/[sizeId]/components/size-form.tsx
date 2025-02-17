@@ -78,12 +78,12 @@ export const SizeForm = ({
       setIsLoading(true);
 
       await axios.delete(
-        `/api/${params.storeId}/categories/${params.categoryId}`
+        `/api/${params.storeId}/sizes/${params.sizeId}`
       );
 
-      toast.success("Category Removed");
+      toast.success("Size Removed");
       router.refresh();
-      router.push(`/${params.storeId}/categories`);
+      router.push(`/${params.storeId}/sizes`);
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
