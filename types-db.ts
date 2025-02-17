@@ -63,3 +63,14 @@ export interface Product{
     createdAt? : Timestamp;
     updateAt? : Timestamp;
 }
+
+export interface Order {
+    id: string;
+    isPaid: boolean;
+    phone: string;
+    orderItems: Product[];
+    address: string;
+    order_status: string;
+    createdAt? : Timestamp;
+    updateAt? : Timestamp;
+}
