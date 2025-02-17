@@ -1,7 +1,7 @@
 import { db } from "@/lib/firebase";
 import { Product } from "@/types-db";
 import { auth } from "@clerk/nextjs/server";
-import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
+import { addDoc, and, collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
 export const POST = async (req : Request,
@@ -103,14 +103,59 @@ export const GET = async (req : Request,
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        const productsData = (
-            await getDocs(
-                collection(doc(db, "stores", params.storeId), "products")
-            )
-        ).docs.map(doc=>doc.data()) as Product[];
+        // get the srachParams from the req.url
+        const {searchParams} = new URL(req.url)
 
-        return NextResponse.json(productsData)
-        
+        const productRef = collection(doc(db, "stores", params.storeId), "products")
+
+        let productQuery
+
+        let queryContraints = []
+
+        // construct the query based on the searchParameters
+        if(searchParams.has("size")){
+            queryContraints.push(where("size","==", searchParams.get("size")))
+        }
+        if(searchParams.has("category")){
+            queryContraints.push(where("category","==", searchParams.get("category")))
+        }
+        if(searchParams.has("kitchen")){
+            queryContraints.push(where("kitchen","==", searchParams.get("kitchen")))
+        }
+        if(searchParams.has("cuisine")){
+            queryContraints.push(where("cuisine","==", searchParams.get("cuisine")))
+        }
+        if(searchParams.has("isFeatured")){
+            queryContraints.push(
+                where(
+                    "isFeatured",
+                    "==", 
+                    searchParams.get("isFeatured") === "true" ? true : false 
+                )
+            )
+        }
+        if(searchParams.has("isArchived")){
+            queryContraints.push(
+                where(
+                    "isArchived",
+                    "==", 
+                    searchParams.get("isArchived") === "true" ? true : false 
+                )
+            )
+        }
+
+        if(queryContraints.length > 0){
+            productQuery = query(productRef, and(...queryContraints))
+        }else{
+            productQuery = query(productRef)
+        }
+
+        // execute the query
+        const querySnapshot = await getDocs(productQuery)
+
+        const productData : Product[] = querySnapshot.docs.map(doc=>doc.data() as Product)
+
+        return NextResponse.json(productData)
 
     } catch (error) {
         console.log(`PRODUCTS_GET:${error}`)

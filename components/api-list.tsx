@@ -15,7 +15,7 @@ const ApiList = ({entityName, entityNameId}: ApiListProps) => {
     const origin = useOrigin()
     const params = useParams()
 
-    const baseUrl = `${origin}/api/${params.storeId};`
+    const baseUrl = `${origin}/api/${params.storeId}`
 
     return(
         <>
