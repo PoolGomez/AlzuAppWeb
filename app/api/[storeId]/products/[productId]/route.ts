@@ -92,8 +92,6 @@ export const PATCH = async (req : Request,
         return new NextResponse("Internal Server Error", { status : 500 })
     }
 }
-
-
 export const DELETE = async (req : Request,
     {params}:{params:{storeId: string, productId: string}}
 ) => {
@@ -149,11 +147,17 @@ export const DELETE = async (req : Request,
         return new NextResponse("Internal Server Error", { status : 500 })
     }
 }
-
+type Params = Promise<{
+    storeId: string,
+    productId: string
+}>
 export const GET = async (req : Request,
-    {params}:{params:{storeId: string, productId: string}}
+    // {params}:{params:{storeId: string, productId: string}}
+    segmentData: {params:Params}
 ) => {
     try {
+
+        const params = await segmentData.params;
         
         if(!params.storeId){
             return new NextResponse("Store Id is missing",{status:400})
@@ -162,18 +166,43 @@ export const GET = async (req : Request,
             return new NextResponse("Product Id is missing",{status:400})
         }
 
-        
-
         const product = (
             await getDoc(
                 doc(db, "stores", params.storeId, "products", params.productId)
             )
-        ).data() as Product
-        
+        ).data() as Product;
+
         return NextResponse.json(product)
 
     } catch (error) {
-        console.log(`PRODUCT_PATCH:${error}`)
+        console.log(`PRODUCT_GET:${error}`)
         return new NextResponse("Internal Server Error", { status : 500 })
     }
 }
+// export const GET = async (req : Request,
+//     {params}:{params:{storeId: string, productId: string}}
+// ) => {
+//     try {
+        
+//         if(!params.storeId){
+//             return new NextResponse("Store Id is missing",{status:400})
+//         }
+//         if(!params.productId){
+//             return new NextResponse("Product Id is missing",{status:400})
+//         }
+
+        
+
+//         const product = (
+//             await getDoc(
+//                 doc(db, "stores", params.storeId, "products", params.productId)
+//             )
+//         ).data() as Product
+        
+//         return NextResponse.json(product)
+
+//     } catch (error) {
+//         console.log(`PRODUCT_PATCH:${error}`)
+//         return new NextResponse("Internal Server Error", { status : 500 })
+//     }
+// }

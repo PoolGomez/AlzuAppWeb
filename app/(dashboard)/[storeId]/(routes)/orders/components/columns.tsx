@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { CellAction } from "./cell-action";
 import { CellImage } from "./cell-image";
+import { cn } from "@/lib/utils";
 
 export type OrderColumns = {
   id: string;
@@ -45,15 +46,42 @@ export const columns: ColumnDef<OrderColumns>[] = [
     header: "Amount",
   },
   {
-    accessorKey: "isPaid",
-    header: "Payment Status",
+    accessorKey: "order_status",
+    header: "Status",
+    cell:({row}) => {
+      const { order_status} = row.original
+
+      return (
+        <p className={cn(
+          "text-base font-semibold", 
+          (order_status === "Delivering" && "text-yellow-500" ) ||
+          (order_status === "Processing" && "text-orange-500") ||
+          (order_status === "Delivered" && "text-emerald-500")  ||
+          (order_status === "Canceled" && "text-red-500")
+        )}>
+          {order_status}
+        </p>
+      )
+    }
   },
   {
-    accessorKey: "products",
-    header: "Products",
-  },
+    accessorKey: "isPaid",
+    header: "Payment Status",
+    cell: ({row}) =>{
+      const {isPaid} = row.original
 
-  
+      return (
+        <p className={cn(
+            "text-lg font-semibold", 
+            isPaid ? "text-emerald-500" : 
+            "text-red-500"
+          )}
+        >
+          {isPaid ? "Paid" : "Not Paid"}
+        </p>
+      )
+    }
+  },
   {
     accessorKey: "createdAt",
     header: ({ column }) => {

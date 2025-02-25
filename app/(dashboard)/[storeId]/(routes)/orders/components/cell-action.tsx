@@ -1,7 +1,7 @@
 "use client"
 
 import { useParams, useRouter } from "next/navigation"
-import { SizeColumns } from "./columns"
+import { OrderColumns } from "./columns"
 import { useState } from "react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
@@ -13,7 +13,7 @@ import axios from "axios"
 import { AlertModal } from "@/components/modal/alert-modal"
 
 interface CellActionProps{
-    data: SizeColumns
+    data: OrderColumns
 }
 export const CellAction = ({data}:CellActionProps) => {
 
@@ -25,7 +25,7 @@ export const CellAction = ({data}:CellActionProps) => {
 
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id);
-        toast.success("Size id copied to clipboard")
+        toast.success("Order id copied to clipboard")
     };
 
     const onDelete = async () => {
@@ -33,12 +33,12 @@ export const CellAction = ({data}:CellActionProps) => {
           setIsLoading(true);
     
           await axios.delete(
-            `/api/${params.storeId}/sizes/${data.id}`
+            `/api/${params.storeId}/orders/${data.id}`
           );
     
-          toast.success("Size Removed");
+          toast.success("Order Removed");
           location.reload()
-          router.push(`/${params.storeId}/sizes`);
+          router.push(`/${params.storeId}/orders`);
         } catch (error) {
           toast.error("Something went wrong");
         } finally {
@@ -46,6 +46,21 @@ export const CellAction = ({data}:CellActionProps) => {
           setOpen(false);
         }
     };
+
+    const onUpdate = async (data: any) => {
+        try {
+            setIsLoading(true);
+            await axios.patch(`/api/${params.storeId}/orders/${data.id}`, data)
+            location.reload()
+            router.push(`/${params.storeId}/orders`)
+            toast.success("Order Updated")
+        } catch (error) {
+            toast.error("Something Went Wrong");
+        }finally{
+            router.refresh()
+            setIsLoading(false);
+        }
+    }
 
 
     return (
@@ -71,9 +86,25 @@ export const CellAction = ({data}:CellActionProps) => {
                     Copy Id
                 </DropdownMenuItem>
 
-                <DropdownMenuItem onClick={()=> router.push(`/${params.storeId}/sizes/${data.id}`)}>
+                <DropdownMenuItem onClick={()=> 
+                    onUpdate({id: data.id, order_status: "Delivering"})
+                    }>
                     <Edit className="h-4 w-4 mr-2" />
-                    Update
+                    Delivering
+                </DropdownMenuItem>
+
+                <DropdownMenuItem onClick={()=> 
+                    onUpdate({id: data.id, order_status: "Delivered"})
+                    }>
+                    <Edit className="h-4 w-4 mr-2" />
+                    Delivered
+                </DropdownMenuItem>
+
+                <DropdownMenuItem onClick={()=> 
+                    onUpdate({id: data.id, order_status: "Canceled"})
+                    }>
+                    <Edit className="h-4 w-4 mr-2" />
+                    Cancel
                 </DropdownMenuItem>
 
                 <DropdownMenuItem onClick={()=> setOpen(true)}>

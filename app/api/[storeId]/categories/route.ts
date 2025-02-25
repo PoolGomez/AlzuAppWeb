@@ -4,6 +4,9 @@ import { auth } from "@clerk/nextjs/server";
 import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
+type Params = Promise<{
+    storeId: string
+}>
 export const POST = async (req : Request,
     {params}:{params:{storeId: string}}
 ) => {
@@ -65,10 +68,11 @@ export const POST = async (req : Request,
 }
 
 export const GET = async (req : Request,
-    {params}:{params:{storeId: string}}
+   segmentData : {params:Params}
 ) => {
     try {
 
+        const params = await segmentData.params;
         if(!params.storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
@@ -87,3 +91,27 @@ export const GET = async (req : Request,
         return new NextResponse("Internal Server Error", { status : 500 })
     }
 }
+
+// export const GET = async (req : Request,
+//     {params}:{params:{storeId: string}}
+// ) => {
+//     try {
+
+//         if(!params.storeId){
+//             return new NextResponse("Store Id is missing",{status:400})
+//         }
+
+//         const categoriesData = (
+//             await getDocs(
+//                 collection(doc(db, "stores", params.storeId), "categories")
+//             )
+//         ).docs.map(doc=>doc.data()) as Category[];
+
+//         return NextResponse.json(categoriesData)
+        
+
+//     } catch (error) {
+//         console.log(`CATEGORIES_GET:${error}`)
+//         return new NextResponse("Internal Server Error", { status : 500 })
+//     }
+// }
