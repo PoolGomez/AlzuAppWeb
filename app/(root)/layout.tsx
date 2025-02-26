@@ -23,7 +23,6 @@ const SetupLayout = async ({children}:SetupLayoutProp) => {
 
     storeSnap.forEach(doc=>{
         store = doc.data() as Store;
-        // console.log(doc.data())
         return
     })
 

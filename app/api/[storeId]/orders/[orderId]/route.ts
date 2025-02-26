@@ -5,9 +5,10 @@ import { deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/fir
 import { NextResponse } from "next/server";
 
 export const PATCH = async (req : Request,
-    {params}:{params:{storeId: string, orderId: string}}
+    {params}:{params:Promise<{storeId: string, orderId: string}>}
 ) => {
     try {
+        const {storeId,orderId} = await params;
         const {userId} = await auth()
         const body = await req.json()
 
@@ -21,15 +22,15 @@ export const PATCH = async (req : Request,
             return new NextResponse("Order Status is required!",{status: 400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        if(!params.orderId){
+        if(!orderId){
             return new NextResponse("Order Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -39,13 +40,13 @@ export const PATCH = async (req : Request,
         }
 
         const orderRef = await getDoc(
-            doc(db, "stores", params.storeId, "orders", params.orderId)
+            doc(db, "stores", storeId, "orders", orderId)
         );
 
         
         if(orderRef.exists()){
             await updateDoc(
-                doc(db, "stores", params.storeId, "orders", params.orderId), {
+                doc(db, "stores", storeId, "orders", orderId), {
                     ...orderRef.data(),
                     order_status,
                     updateAt: serverTimestamp()
@@ -57,7 +58,7 @@ export const PATCH = async (req : Request,
 
         const order = (
             await getDoc(
-                doc(db, "stores", params.storeId, "orders", params.orderId)
+                doc(db, "stores", storeId, "orders", orderId)
             )
         ).data() as Order;
         
@@ -71,24 +72,25 @@ export const PATCH = async (req : Request,
 
 
 export const DELETE = async (req : Request,
-    {params}:{params:{storeId: string, orderId: string}}
+    {params}:{params:Promise<{storeId: string, orderId: string}>}
 ) => {
     try {
+        const {storeId, orderId} = await params;
         const {userId} = await auth()
 
         if(!userId){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        if(!params.orderId){
+        if(!orderId){
             return new NextResponse("Order is required",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -97,7 +99,7 @@ export const DELETE = async (req : Request,
             }
         }
 
-        const docRef = doc(db, "stores", params.storeId, "orders", params.orderId)
+        const docRef = doc(db, "stores", storeId, "orders", orderId)
         
         await deleteDoc(docRef)
         

@@ -5,9 +5,10 @@ import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, updateDoc } 
 import { NextResponse } from "next/server";
 
 export const POST = async (req : Request,
-    {params}:{params:{storeId: string}}
+    {params}:{params:Promise<{storeId: string}>}
 ) => {
     try {
+        const {storeId} = await params;
         const {userId} = await auth()
         const body = await req.json()
 
@@ -25,11 +26,11 @@ export const POST = async (req : Request,
             return new NextResponse("Kitchen Value is missing!",{status: 400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -44,12 +45,12 @@ export const POST = async (req : Request,
         }
 
         const kitchenRef = await addDoc(
-            collection(db, "stores", params.storeId, "kitchens"),
+            collection(db, "stores", storeId, "kitchens"),
             kitchenData
         )
         const id = kitchenRef.id
 
-        await updateDoc(doc(db, "stores", params.storeId, "kitchens", id),{
+        await updateDoc(doc(db, "stores", storeId, "kitchens", id),{
             ...kitchenData,
             id,
             updateAt: serverTimestamp()
@@ -64,17 +65,17 @@ export const POST = async (req : Request,
 }
 
 export const GET = async (req : Request,
-    {params}:{params:{storeId: string}}
+    {params}:{params:Promise<{storeId: string}>}
 ) => {
     try {
-
-        if(!params.storeId){
+        const {storeId} = await params;
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
         const kitchensData = (
             await getDocs(
-                collection(doc(db, "stores", params.storeId), "kitchens")
+                collection(doc(db, "stores", storeId), "kitchens")
             )
         ).docs.map(doc=>doc.data()) as Kitchen[];
 

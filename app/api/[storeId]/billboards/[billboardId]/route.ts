@@ -5,9 +5,10 @@ import { deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/fir
 import { NextResponse } from "next/server";
 
 export const PATCH = async (req : Request,
-    {params}:{params:{storeId: string, billboardId: string}}
+    {params}:{params:Promise<{storeId: string, billboardId: string}>}
 ) => {
     try {
+        const {storeId, billboardId} = await params;
         const {userId} = await auth()
         const body = await req.json()
 
@@ -25,15 +26,15 @@ export const PATCH = async (req : Request,
             return new NextResponse("ImageUrl is missing!",{status: 400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        if(!params.billboardId){
+        if(!billboardId){
             return new NextResponse("Billboard Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -43,12 +44,12 @@ export const PATCH = async (req : Request,
         }
 
         const billboardRef = await getDoc(
-            doc(db, "stores", params.storeId, "billboards", params.billboardId)
+            doc(db, "stores", storeId, "billboards", billboardId)
         )
         
         if(billboardRef.exists()){
             await updateDoc(
-                doc(db, "stores", params.storeId, "billboards", params.billboardId), {
+                doc(db, "stores", storeId, "billboards", billboardId), {
                     ...billboardRef.data(),
                     label,
                     imageUrl,
@@ -61,7 +62,7 @@ export const PATCH = async (req : Request,
 
         const billboard = (
             await getDoc(
-                doc(db, "stores", params.storeId, "billboards", params.billboardId)
+                doc(db, "stores", storeId, "billboards", billboardId)
             )
         ).data() as Billboards
         
@@ -75,24 +76,25 @@ export const PATCH = async (req : Request,
 
 
 export const DELETE = async (req : Request,
-    {params}:{params:{storeId: string, billboardId: string}}
+    {params}:{params:Promise<{storeId: string, billboardId: string}>}
 ) => {
     try {
+        const {storeId, billboardId} = await params;
         const {userId} = await auth()
 
         if(!userId){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        if(!params.billboardId){
+        if(!billboardId){
             return new NextResponse("Billboard Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -101,7 +103,7 @@ export const DELETE = async (req : Request,
             }
         }
 
-        const billboardRef = doc(db, "stores", params.storeId, "billboards", params.billboardId)
+        const billboardRef = doc(db, "stores", storeId, "billboards", billboardId)
         
         await deleteDoc(billboardRef)
         

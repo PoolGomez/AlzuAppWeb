@@ -5,9 +5,10 @@ import { addDoc, and, collection, doc, getDoc, getDocs, query, serverTimestamp, 
 import { NextResponse } from "next/server";
 
 export const POST = async (req : Request,
-    {params}:{params:{storeId: string}}
+    {params}:{params:Promise<{storeId: string}>}
 ) => {
     try {
+        const {storeId} = await params;
         const {userId} = await auth()
         const body = await req.json()
 
@@ -41,11 +42,11 @@ export const POST = async (req : Request,
             return new NextResponse("Product price is missing!",{status: 400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -67,12 +68,12 @@ export const POST = async (req : Request,
         }
 
         const productRef = await addDoc(
-            collection(db, "stores", params.storeId, "products"),
+            collection(db, "stores", storeId, "products"),
             productData
         )
         const id = productRef.id
 
-        await updateDoc(doc(db, "stores", params.storeId, "products", id),{
+        await updateDoc(doc(db, "stores", storeId, "products", id),{
             ...productData,
             id,
             // price,
@@ -95,18 +96,18 @@ export const POST = async (req : Request,
 }
 
 export const GET = async (req : Request,
-    {params}:{params:{storeId: string}}
+    {params}:{params:Promise<{storeId: string}>}
 ) => {
     try {
-
-        if(!params.storeId){
+        const {storeId} = await params;
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
         // get the srachParams from the req.url
         const {searchParams} = new URL(req.url)
 
-        const productRef = collection(doc(db, "stores", params.storeId), "products")
+        const productRef = collection(doc(db, "stores", storeId), "products")
 
         let productQuery
 

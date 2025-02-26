@@ -5,8 +5,11 @@ import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase
 import { deleteObject, ref } from "firebase/storage"
 import { NextResponse } from "next/server"
 
-export const PATCH = async ( req : Request,{params}:{params: {storeId: string}} ) => {
+export const PATCH = async ( req : Request,
+    {params}:{params: Promise<{storeId: string}>} 
+) => {
     try {
+        const {storeId} = await params;
         const {userId} = await auth()
         const body = await req.json()
 
@@ -14,7 +17,7 @@ export const PATCH = async ( req : Request,{params}:{params: {storeId: string}} 
             return new NextResponse("Un-Authorized",{status:400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is Required",{status:400})
         }
 
@@ -24,7 +27,7 @@ export const PATCH = async ( req : Request,{params}:{params: {storeId: string}} 
             return new NextResponse("Store Name is missing!",{status: 400})
         }
 
-        const docRef = doc(db, "stores", params.storeId)
+        const docRef = doc(db, "stores", storeId)
 
         await updateDoc(docRef, {name})
 
@@ -38,25 +41,26 @@ export const PATCH = async ( req : Request,{params}:{params: {storeId: string}} 
     }
 }
 
-export const DELETE = async ( req : Request,{params}:{params: {storeId: string}} ) => {
+export const DELETE = async ( req : Request,{params}:{params:Promise<{storeId: string}>} ) => {
     try {
+        const {storeId} = await params;
         const {userId} = await auth()
 
         if(!userId){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is Required",{status:400})
         }
 
-        const docRef = doc(db, "stores", params.storeId)
+        const docRef = doc(db, "stores", storeId)
 
         //TODO: Delete all the subcollections- and along with those data file un
 
         // billboards and its images
         const billboardsQuerySnapshot = await getDocs(
-            collection(db, `stores/${params.storeId}/billboards` )
+            collection(db, `stores/${storeId}/billboards` )
         )
 
         billboardsQuerySnapshot.forEach(async (billboardDoc) =>{
@@ -73,7 +77,7 @@ export const DELETE = async ( req : Request,{params}:{params: {storeId: string}}
         // categories
 
         const categoriesQuerySnapshot = await getDocs(
-            collection(db, `stores/${params.storeId}/categories` )
+            collection(db, `stores/${storeId}/categories` )
         )
 
         categoriesQuerySnapshot.forEach(async (categoryDoc) => {
@@ -83,7 +87,7 @@ export const DELETE = async ( req : Request,{params}:{params: {storeId: string}}
         // sizes
 
         const sizesQuerySnapshot = await getDocs(
-            collection(db, `stores/${params.storeId}/sizes` )
+            collection(db, `stores/${storeId}/sizes` )
         )
 
         sizesQuerySnapshot.forEach(async (sizeDoc) => {
@@ -93,7 +97,7 @@ export const DELETE = async ( req : Request,{params}:{params: {storeId: string}}
         //kitchens
 
         const kitchenQuerySnapshot = await getDocs(
-            collection(db, `stores/${params.storeId}/kitchens` )
+            collection(db, `stores/${storeId}/kitchens` )
         )
 
         kitchenQuerySnapshot.forEach(async (kitchenDoc) => {
@@ -103,7 +107,7 @@ export const DELETE = async ( req : Request,{params}:{params: {storeId: string}}
         // cuisines
 
         const cuisineQuerySnapshot = await getDocs(
-            collection(db, `stores/${params.storeId}/cuisines` )
+            collection(db, `stores/${storeId}/cuisines` )
         )
 
         cuisineQuerySnapshot.forEach(async (cuisineDoc) => {
@@ -112,7 +116,7 @@ export const DELETE = async ( req : Request,{params}:{params: {storeId: string}}
 
         // products and its images
         const productsQuerySnapshot = await getDocs(
-            collection(db, `stores/${params.storeId}/products` )
+            collection(db, `stores/${storeId}/products` )
         )
 
         productsQuerySnapshot.forEach(async (productDoc) =>{
@@ -132,7 +136,7 @@ export const DELETE = async ( req : Request,{params}:{params: {storeId: string}}
 
         // orders and its order items and its images
         const ordersQuerySnapshot = await getDocs(
-            collection(db, `stores/${params.storeId}/orders`)
+            collection(db, `stores/${storeId}/orders`)
         )
         ordersQuerySnapshot.forEach(async (orderDoc) =>{
 

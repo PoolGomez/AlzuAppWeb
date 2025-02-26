@@ -6,9 +6,10 @@ import { deleteObject, ref } from "firebase/storage";
 import { NextResponse } from "next/server";
 
 export const PATCH = async (req : Request,
-    {params}:{params:{storeId: string, productId: string}}
+    {params}:{params:Promise<{storeId: string, productId: string}>}
 ) => {
     try {
+        const {storeId, productId} = await params;
         const {userId} = await auth()
         const body = await req.json()
 
@@ -42,11 +43,11 @@ export const PATCH = async (req : Request,
             return new NextResponse("Product price is missing!",{status: 400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -56,12 +57,12 @@ export const PATCH = async (req : Request,
         }
 
         const productRef = await getDoc(
-            doc(db, "stores", params.storeId, "products", params.productId)
+            doc(db, "stores", storeId, "products", productId)
         )
         
         if(productRef.exists()){
             await updateDoc(
-                doc(db, "stores", params.storeId, "products", params.productId), {
+                doc(db, "stores", storeId, "products", productId), {
                     ...productRef.data(),
                     name,
                     price,
@@ -81,7 +82,7 @@ export const PATCH = async (req : Request,
 
         const product = (
             await getDoc(
-                doc(db, "stores", params.storeId, "products", params.productId)
+                doc(db, "stores", storeId, "products", productId)
             )
         ).data() as Product
         
@@ -93,24 +94,25 @@ export const PATCH = async (req : Request,
     }
 }
 export const DELETE = async (req : Request,
-    {params}:{params:{storeId: string, productId: string}}
+    {params}:{params:Promise<{storeId: string, productId: string}>}
 ) => {
     try {
+        const {storeId, productId} = await params;
         const {userId} = await auth()
 
         if(!userId){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        if(!params.productId){
+        if(!productId){
             return new NextResponse("Product Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -119,7 +121,7 @@ export const DELETE = async (req : Request,
             }
         }
 
-        const productRef = doc(db, "stores", params.storeId, "products", params.productId)
+        const productRef = doc(db, "stores", storeId, "products", productId)
 
         const productDoc = await getDoc(productRef)
         if(!productDoc.exists()){
@@ -147,28 +149,24 @@ export const DELETE = async (req : Request,
         return new NextResponse("Internal Server Error", { status : 500 })
     }
 }
-type Params = Promise<{
-    storeId: string,
-    productId: string
-}>
+
 export const GET = async (req : Request,
-    // {params}:{params:{storeId: string, productId: string}}
-    segmentData: {params:Params}
+    {params}:{params:Promise<{storeId: string, productId: string}>}
 ) => {
     try {
 
-        const params = await segmentData.params;
+        const {storeId, productId} = await params;
         
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
-        if(!params.productId){
+        if(!productId){
             return new NextResponse("Product Id is missing",{status:400})
         }
 
         const product = (
             await getDoc(
-                doc(db, "stores", params.storeId, "products", params.productId)
+                doc(db, "stores", storeId, "products", productId)
             )
         ).data() as Product;
 

@@ -24,7 +24,6 @@ export const Navbar = async () => {
 
 
     storeSnap.forEach(doc => {
-        console.log("doc:",doc.data())
         const dat = doc.data()
         stores.push({
             id: dat.id,
@@ -37,8 +36,6 @@ export const Navbar = async () => {
             
         );
     })
-
-    console.log(JSON.stringify( stores ) )
 
     return ( 
         <div className="border-b">

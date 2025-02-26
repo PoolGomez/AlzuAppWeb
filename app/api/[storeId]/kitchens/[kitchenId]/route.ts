@@ -5,9 +5,10 @@ import { deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/fir
 import { NextResponse } from "next/server";
 
 export const PATCH = async (req : Request,
-    {params}:{params:{storeId: string, kitchenId: string}}
+    {params}:{params:Promise<{storeId: string, kitchenId: string}>}
 ) => {
     try {
+        const {storeId, kitchenId} = await params;
         const {userId} = await auth()
         const body = await req.json()
 
@@ -25,11 +26,11 @@ export const PATCH = async (req : Request,
             return new NextResponse("Kitchen Value is missing!",{status: 400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -39,12 +40,12 @@ export const PATCH = async (req : Request,
         }
 
         const kitchenRef = await getDoc(
-            doc(db, "stores", params.storeId, "kitchens", params.kitchenId)
+            doc(db, "stores", storeId, "kitchens", kitchenId)
         )
         
         if(kitchenRef.exists()){
             await updateDoc(
-                doc(db, "stores", params.storeId, "kitchens", params.kitchenId), {
+                doc(db, "stores", storeId, "kitchens", kitchenId), {
                     ...kitchenRef.data(),
                     name,
                     value,
@@ -57,7 +58,7 @@ export const PATCH = async (req : Request,
 
         const kitchen = (
             await getDoc(
-                doc(db, "stores", params.storeId, "kitchens", params.kitchenId)
+                doc(db, "stores", storeId, "kitchens", kitchenId)
             )
         ).data() as Kitchen
         
@@ -71,24 +72,25 @@ export const PATCH = async (req : Request,
 
 
 export const DELETE = async (req : Request,
-    {params}:{params:{storeId: string, kitchenId: string}}
+    {params}:{params:Promise<{storeId: string, kitchenId: string}>}
 ) => {
     try {
+        const {storeId, kitchenId} = await params;
         const {userId} = await auth()
 
         if(!userId){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        if(!params.kitchenId){
+        if(!kitchenId){
             return new NextResponse("Kitchen Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -97,7 +99,7 @@ export const DELETE = async (req : Request,
             }
         }
 
-        const kitchenRef = doc(db, "stores", params.storeId, "kitchens", params.kitchenId)
+        const kitchenRef = doc(db, "stores", storeId, "kitchens", kitchenId)
         
         await deleteDoc(kitchenRef)
         

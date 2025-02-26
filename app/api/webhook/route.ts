@@ -38,7 +38,7 @@ export const POST = async (req: Request) => {
     const addressString = addressComponents.filter((a) => a !== null).join(", ")
 
     if(event.type === "checkout.session.completed"){
-        console.log(`Order Id: `, session?.metadata?.orderId);
+        
         if(session?.metadata?.orderId){
             await updateDoc(
                 doc(

@@ -4,17 +4,17 @@ import { collection, doc, getDocs } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
 export const GET = async (req : Request,
-    {params}:{params:{storeId: string}}
+    {params}:{params:Promise<{storeId: string}>}
 ) => {
     try {
-
-        if(!params.storeId){
+        const {storeId} = await params;
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
         const ordersData = (
             await getDocs(
-                collection(doc(db, "stores", params.storeId), "orders")
+                collection(doc(db, "stores", storeId), "orders")
             )
         ).docs.map(doc=>doc.data()) as Order[];
 

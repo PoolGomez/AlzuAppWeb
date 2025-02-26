@@ -17,8 +17,9 @@ export const OPTIONS = async () => {
 
 export const POST = async (
     req: Request,
-    {params}:{params: { storeId: string}}
+    {params}:{params:Promise<{ storeId: string}>}
 )=>{
+    const {storeId} = await params;
     const {products, userId} = await req.json();
 
     const line_items : Stripe.Checkout.SessionCreateParams.LineItem[] = [];
@@ -45,13 +46,13 @@ export const POST = async (
     };
 
     const orderRef = await addDoc(
-        collection(db, "stores", params.storeId, "orders"),
+        collection(db, "stores", storeId, "orders"),
         orderData
     );
 
     const id = orderRef.id;
 
-    await updateDoc(doc(db, "stores", params.storeId, "orders" , id), {
+    await updateDoc(doc(db, "stores", storeId, "orders" , id), {
         ...orderData,
         id,
         updateAt: serverTimestamp()
@@ -71,7 +72,7 @@ export const POST = async (
         cancel_url: `${process.env.FRONTEND_STORE_URL}/cart?cancel=1`,
         metadata: {
             orderId: id,
-            storeId: params.storeId
+            storeId: storeId
         }
     });
 

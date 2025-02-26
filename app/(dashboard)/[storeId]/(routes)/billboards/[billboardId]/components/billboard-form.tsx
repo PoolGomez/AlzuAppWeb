@@ -129,7 +129,7 @@ export const BillboardForm = ({initialData}: BillboardFormProps) => {
                         <FormControl>
                             <ImageUpload
                                 value ={field.value ? [field.value] : []}
-                                disabled={isLoading}
+                                // disabled={isLoading}
                                 onChange={(url)=>field.onChange(url)}
                                 onRemove={()=>field.onChange("")}
                             />

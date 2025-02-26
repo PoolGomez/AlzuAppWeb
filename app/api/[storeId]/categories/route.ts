@@ -4,13 +4,11 @@ import { auth } from "@clerk/nextjs/server";
 import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
-type Params = Promise<{
-    storeId: string
-}>
 export const POST = async (req : Request,
-    {params}:{params:{storeId: string}}
+    {params}:{params:Promise<{storeId: string}>}
 ) => {
     try {
+        const {storeId} = await params;
         const {userId} = await auth()
         const body = await req.json()
 
@@ -28,11 +26,11 @@ export const POST = async (req : Request,
             return new NextResponse("Billboard Id is missing!",{status: 400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -48,12 +46,12 @@ export const POST = async (req : Request,
         }
 
         const categoryRef = await addDoc(
-            collection(db, "stores", params.storeId, "categories"),
+            collection(db, "stores", storeId, "categories"),
             categoryData
         )
         const id = categoryRef.id
 
-        await updateDoc(doc(db, "stores", params.storeId, "categories", id),{
+        await updateDoc(doc(db, "stores", storeId, "categories", id),{
             ...categoryData,
             id,
             updateAt: serverTimestamp()
@@ -68,18 +66,18 @@ export const POST = async (req : Request,
 }
 
 export const GET = async (req : Request,
-   segmentData : {params:Params}
+   {params}:{params:Promise<{storeId: string}>}
 ) => {
     try {
 
-        const params = await segmentData.params;
-        if(!params.storeId){
+        const {storeId} = await params;
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
         const categoriesData = (
             await getDocs(
-                collection(doc(db, "stores", params.storeId), "categories")
+                collection(doc(db, "stores", storeId), "categories")
             )
         ).docs.map(doc=>doc.data()) as Category[];
 

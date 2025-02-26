@@ -5,9 +5,10 @@ import { deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/fir
 import { NextResponse } from "next/server";
 
 export const PATCH = async (req : Request,
-    {params}:{params:{storeId: string, categoryId: string}}
+    {params}:{params: Promise<{storeId: string, categoryId: string}>}
 ) => {
     try {
+        const {storeId , categoryId} = await params;
         const {userId} = await auth()
         const body = await req.json()
 
@@ -25,11 +26,11 @@ export const PATCH = async (req : Request,
             return new NextResponse("Billboard Id is missing!",{status: 400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -39,12 +40,12 @@ export const PATCH = async (req : Request,
         }
 
         const categoryRef = await getDoc(
-            doc(db, "stores", params.storeId, "categories", params.categoryId)
+            doc(db, "stores", storeId, "categories", categoryId)
         )
         
         if(categoryRef.exists()){
             await updateDoc(
-                doc(db, "stores", params.storeId, "categories", params.categoryId), {
+                doc(db, "stores", storeId, "categories", categoryId), {
                     ...categoryRef.data(),
                     name,
                     billboardId,
@@ -58,7 +59,7 @@ export const PATCH = async (req : Request,
 
         const category = (
             await getDoc(
-                doc(db, "stores", params.storeId, "categories", params.categoryId)
+                doc(db, "stores", storeId, "categories", categoryId)
             )
         ).data() as Category
         
@@ -72,24 +73,25 @@ export const PATCH = async (req : Request,
 
 
 export const DELETE = async (req : Request,
-    {params}:{params:{storeId: string, categoryId: string}}
+    {params}:{params:Promise<{storeId: string, categoryId: string}>}
 ) => {
     try {
+        const {storeId, categoryId} = await params;
         const {userId} = await auth()
 
         if(!userId){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})
         }
 
-        if(!params.categoryId){
+        if(!categoryId){
             return new NextResponse("Category Id is missing",{status:400})
         }
 
-        const store = await getDoc(doc(db, "stores", params.storeId))
+        const store = await getDoc(doc(db, "stores", storeId))
 
         if(store.exists()){
             const storeData = store.data()
@@ -98,7 +100,7 @@ export const DELETE = async (req : Request,
             }
         }
 
-        const categoryRef = doc(db, "stores", params.storeId, "categories", params.categoryId)
+        const categoryRef = doc(db, "stores", storeId, "categories", categoryId)
         
         await deleteDoc(categoryRef)
         

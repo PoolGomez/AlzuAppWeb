@@ -1,6 +1,8 @@
 "use client"
 
-import {Badge, BadgeProps} from "@/components/ui/badge"
+import {Badge, 
+    // BadgeProps
+} from "@/components/ui/badge"
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Copy, Server } from "lucide-react";
 import { Button } from "./ui/button";
@@ -11,13 +13,19 @@ interface ApiAlertProps {
     description : string;
     variant : "public" | "admin";
 }
+interface PGBadgeProps {
+    variant: "secondary"|"destructive";
+}
 
 const textMap : Record<ApiAlertProps["variant"], string> = {
     public : "Public",
     admin : "Admin",
 }
 
-const variantMap : Record<ApiAlertProps["variant"], BadgeProps["variant"]> = {
+const variantMap : Record<ApiAlertProps["variant"]
+// ,BadgeProps["variant"]
+,PGBadgeProps["variant"]
+> = {
     public : "secondary",
     admin: "destructive",
 }
@@ -32,7 +40,7 @@ export const ApiAlert = ({title, description, variant="public"}:ApiAlertProps) =
             <Server className="h-4 w-4" />
             <AlertTitle className="flex items-center gap-x-2">
                 {title}
-                <Badge variant={variantMap[variant]}>{textMap[variant]}</Badge>
+                <Badge  variant={variantMap[variant]}>{textMap[variant]}</Badge>
             </AlertTitle>
             <AlertDescription className="mt-4 flex items-center justify-between">
                 <code 
