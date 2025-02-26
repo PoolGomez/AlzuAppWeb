@@ -3,16 +3,24 @@ import { Billboards } from "@/types-db";
 import { doc, getDoc } from "firebase/firestore";
 import { BillboardForm } from "./components/billboard-form";
 
-const BillboardPage = async (
-    {params}:{params: 
-            {
-                storeId: string, 
-                billboardId: string
-            }
-        }
-    ) => {
+// interface BillboardPageProps{
+//     params : Promise<{ 
+//         storeId : string,
+//         billboardId: string
+//     }>
+// }
 
-        const billboard = (await getDoc(doc(db,"stores", params.storeId, "billboards", params.billboardId ))).data() as Billboards
+const BillboardPage = async (
+    {
+        params,
+    }:{
+        params: Promise<{storeId: string, billboardId: string}>
+    }
+    ) => {
+        // const {storeId,billboardId } = await params;
+        const storeId = (await params).storeId;
+        const billboardId = (await params).billboardId;
+        const billboard = (await getDoc(doc(db,"stores", storeId, "billboards", billboardId ))).data() as Billboards
     return ( 
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">

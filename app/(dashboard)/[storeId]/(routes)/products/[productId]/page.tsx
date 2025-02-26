@@ -6,31 +6,32 @@ import { ProductForm } from "./components/product-form";
 const ProductPage = async ({
   params,
 }: {
-  params: {
-    storeId: string;
-    productId: string;
-  };
+  params: Promise<{
+    storeId: string,
+    productId: string
+  }>
 }) => {
+  const {storeId, productId} =await params;
   const product = (
     await getDoc(
-      doc(db, "stores", params.storeId, "products", params.productId)
+      doc(db, "stores", storeId, "products", productId)
     )
   ).data() as Product;
 
   const categoriesData = (
-    await getDocs(collection(doc(db,"stores", params.storeId), "categories"))
+    await getDocs(collection(doc(db,"stores", storeId), "categories"))
   ).docs.map(doc => doc.data()) as Category[]
 
   const sizesData = (
-    await getDocs(collection(doc(db,"stores", params.storeId), "sizes"))
+    await getDocs(collection(doc(db,"stores", storeId), "sizes"))
   ).docs.map(doc => doc.data()) as Size[]
 
   const kitchensData = (
-    await getDocs(collection(doc(db,"stores", params.storeId), "kitchens"))
+    await getDocs(collection(doc(db,"stores", storeId), "kitchens"))
   ).docs.map(doc => doc.data()) as Kitchen[]
 
   const cuisinesData = (
-    await getDocs(collection(doc(db,"stores", params.storeId), "cuisines"))
+    await getDocs(collection(doc(db,"stores", storeId), "cuisines"))
   ).docs.map(doc => doc.data()) as Cuisine[]
 
   return (

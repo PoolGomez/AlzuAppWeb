@@ -1,6 +1,5 @@
 "use client"
 
-import { ApiAlert } from "@/components/api-alert"
 import { Heading } from "@/components/heading"
 import ImageUpload from "@/components/image-upload"
 import { AlertModal } from "@/components/modal/alert-modal"
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { useOrigin } from "@/hooks/use-origin"
+// import { useOrigin } from "@/hooks/use-origin"
 import { storage } from "@/lib/firebase"
 import { Billboards } from "@/types-db"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -41,7 +40,7 @@ export const BillboardForm = ({initialData}: BillboardFormProps) => {
     const [open, setOpen] = useState(false)
     const params = useParams()
     const router = useRouter()
-    const origin = useOrigin()
+    // const origin = useOrigin()
 
     const title = initialData ? "Edit Billboard" : "Create Billboard";
     const description = initialData ? "Edit a billboard":"Add new billboard";
@@ -87,6 +86,7 @@ export const BillboardForm = ({initialData}: BillboardFormProps) => {
             router.refresh();
             router.push(`/${params.storeId}/billboards`);
         } catch (error) {
+            console.log(error)
             toast.error("Something went wrong")
         }finally{
             setIsLoading(false)
@@ -158,7 +158,7 @@ export const BillboardForm = ({initialData}: BillboardFormProps) => {
                 />
             </div>
             
-                <Button disabled={isLoading} type="submit" size={"sm"}>Save Changes</Button>
+                <Button disabled={isLoading} type="submit" size={"sm"}>{action}</Button>
             
         </form>
     </Form>

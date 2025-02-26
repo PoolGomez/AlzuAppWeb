@@ -38,6 +38,7 @@ export const CellAction = ({data}:CellActionProps) => {
           location.reload()
           router.push(`/${params.storeId}/kitchens`);
         } catch (error) {
+            console.log(error);
           toast.error("Something went wrong");
         } finally {
           setIsLoading(false);

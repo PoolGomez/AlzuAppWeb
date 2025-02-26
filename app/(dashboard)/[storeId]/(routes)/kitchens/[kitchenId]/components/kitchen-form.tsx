@@ -85,6 +85,7 @@ export const KitchenForm = ({
       router.refresh();
       router.push(`/${params.storeId}/kitchens`);
     } catch (error) {
+      console.log(error);
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
@@ -160,7 +161,7 @@ export const KitchenForm = ({
           </div>
 
           <Button disabled={isLoading} type="submit" size={"sm"}>
-            Save Changes
+            {action}
           </Button>
         </form>
       </Form>

@@ -42,7 +42,7 @@ export function StoreSwitcher({items}: StoreSwitcherProps) {
 
     }
 
-    const handleSearchTerm = (e: any) => {
+    const handleSearchTerm = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
         setFiltered(
             formattedStores?.filter(item => item.label.toLowerCase().includes(

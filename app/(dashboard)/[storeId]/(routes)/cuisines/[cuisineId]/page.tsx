@@ -6,14 +6,15 @@ import { CuisineForm } from "./components/cuisine-form";
 const CuisinePage = async ({
   params,
 }: {
-  params: {
+  params: Promise<{
     storeId: string;
     cuisineId: string;
-  };
+  }>
 }) => {
+  const {storeId, cuisineId} = await params;
   const cuisine = (
     await getDoc(
-      doc(db, "stores", params.storeId, "cuisines", params.cuisineId)
+      doc(db, "stores", storeId, "cuisines", cuisineId)
     )
   ).data() as Cuisine;
 

@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { useOrigin } from "@/hooks/use-origin";
+// import { useOrigin } from "@/hooks/use-origin";
 import { Billboards, Category } from "@/types-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -53,7 +53,7 @@ export const CategoryForm = ({
   const [open, setOpen] = useState(false);
   const params = useParams();
   const router = useRouter();
-  const origin = useOrigin();
+  // const origin = useOrigin();
 
   const title = initialData ? "Edit Category" : "Create Category";
   const description = initialData ? "Edit a Category" : "Add new Category";
@@ -110,6 +110,7 @@ export const CategoryForm = ({
       router.refresh();
       router.push(`/${params.storeId}/categories`);
     } catch (error) {
+      console.log(error);
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
@@ -200,7 +201,7 @@ export const CategoryForm = ({
           </div>
 
           <Button disabled={isLoading} type="submit" size={"sm"}>
-            Save Changes
+            {action}
           </Button>
         </form>
       </Form>

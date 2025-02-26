@@ -5,10 +5,10 @@ import Link from "next/link"
 import { useParams, usePathname } from "next/navigation"
 
 export const MainNav = (
-    {
-        className,
-         ...props
-    }: React.HtmlHTMLAttributes<HTMLElement>
+    // {
+        // className,
+        //  ...props
+    // }: React.HtmlHTMLAttributes<HTMLElement>
 ) => {
 
     const pathname = usePathname()

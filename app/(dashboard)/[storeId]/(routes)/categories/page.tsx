@@ -6,11 +6,12 @@ import { CategoryColumns } from "./components/columns";
 import { CategoryClient } from "./components/client";
 
 
-const CategoriesPage = async ({params}:{params:{storeId: string}}) => {
+const CategoriesPage = async ({params}:{params:Promise<{storeId: string}>}) => {
 
+    const {storeId} = await params;
     const categoriesData = (
         await getDocs(
-            collection(doc(db, "stores", params.storeId), "categories")
+            collection(doc(db, "stores", storeId), "categories")
         )
     ).docs.map(doc => doc.data()) as Category[];
 

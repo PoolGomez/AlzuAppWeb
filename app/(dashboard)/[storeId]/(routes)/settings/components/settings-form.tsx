@@ -44,7 +44,7 @@ export const SettingsForm = ({initialData}: SettingsFormProps) => {
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             setIsLoading(true)
-            const response = await axios.patch(`/api/stores/${params.storeId}`, data);
+            await axios.patch(`/api/stores/${params.storeId}`, data);
             toast.success("Store Updated")
             router.refresh();
         } catch (error) {
@@ -58,7 +58,7 @@ export const SettingsForm = ({initialData}: SettingsFormProps) => {
     const onDelete = async()=>{
         try {
             setIsLoading(true)
-            const response = await axios.delete(`/api/stores/${params.storeId}`);
+            await axios.delete(`/api/stores/${params.storeId}`);
             toast.success("Store Removed")
             router.refresh();
             router.push("/")

@@ -10,14 +10,14 @@ import { PuffLoader } from "react-spinners"
 import { Button } from "./ui/button";
 
 interface ImageUploadProps {
-    disabled? : boolean;
+    // disabled? : boolean;
     onChange : (value: string) => void;
     onRemove : (value:string) => void;
     value: string[];
 }
 
 const ImageUpload = ({
-    disabled,
+    // disabled,
     onChange,
     onRemove,
     value,
@@ -35,8 +35,13 @@ const ImageUpload = ({
         return null
     }
 
-    const onUpload = async (e: any) => {
-        const file = e.target.files[0];
+    const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ;
+        if(!file){
+            toast.error("No se ha seleccionado ningun archivo.");
+            return;
+        }
+
         setIsLoading(true)
 
         const uploadTask = uploadBytesResumable(

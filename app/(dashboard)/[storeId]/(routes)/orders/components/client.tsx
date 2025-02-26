@@ -1,14 +1,11 @@
 "use client"
 
 import { Heading } from "@/components/heading"
-import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { Separator } from "@/components/ui/separator"
-
-import { Plus } from "lucide-react"
-import { useParams, useRouter } from "next/navigation"
+// import { useParams, useRouter } from "next/navigation"
 import { columns, OrderColumns } from "./columns"
-import ApiList from "@/components/api-list"
+
 
 
 interface OrderClientProps{
@@ -17,8 +14,8 @@ interface OrderClientProps{
 
 export const OrderClient = ({data}: OrderClientProps) => {
 
-    const params = useParams()
-    const router = useRouter()
+    // const params = useParams()
+    // const router = useRouter()
 
     return (
         <>

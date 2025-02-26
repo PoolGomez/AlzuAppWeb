@@ -6,11 +6,11 @@ import { KitchenColumns } from "./components/columns";
 import { KitchenClient } from "./components/client";
 
 
-const KitchensPage = async ({params}:{params:{storeId: string}}) => {
-
+const KitchensPage = async ({params}:{params:Promise<{storeId: string}>}) => {
+    const {storeId} = await params;
     const kitchensData = (
         await getDocs(
-            collection(doc(db, "stores", params.storeId), "kitchens")
+            collection(doc(db, "stores", storeId), "kitchens")
         )
     ).docs.map(doc => doc.data()) as Kitchen[];
 

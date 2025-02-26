@@ -9,14 +9,11 @@ import { Heading } from "@/components/heading";
 import Overview from "@/components/overview";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { db } from "@/lib/firebase";
 import { formatter } from "@/lib/utils";
-import { Store } from "@/types-db";
-import { doc, getDoc } from "firebase/firestore";
 import { DollarSign } from "lucide-react";
 
 interface DashboardOverviewProps{
-    params : { storeId : string }
+    params : Promise<{ storeId : string }>
 }
 
 const DashboardOverview = async ({params}: DashboardOverviewProps) => {

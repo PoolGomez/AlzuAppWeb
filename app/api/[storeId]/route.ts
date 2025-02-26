@@ -1,7 +1,7 @@
 import { db, storage } from "@/lib/firebase"
 import { Store } from "@/types-db"
 import { auth } from "@clerk/nextjs/server"
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore"
+import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import { NextResponse } from "next/server"
 

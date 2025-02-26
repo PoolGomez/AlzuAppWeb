@@ -6,19 +6,20 @@ import { CategoryForm } from "./components/category-form";
 const CategoryPage = async ({
   params,
 }: {
-  params: {
-    storeId: string;
-    categoryId: string;
-  };
+  params: Promise<{
+    storeId: string,
+    categoryId: string
+  }>
 }) => {
+  const {storeId, categoryId} = await params;
   const category = (
     await getDoc(
-      doc(db, "stores", params.storeId, "categories", params.categoryId)
+      doc(db, "stores", storeId, "categories", categoryId)
     )
   ).data() as Category;
 
   const billboardsData = (
-    await getDocs(collection(doc(db, "stores", params.storeId), "billboards"))
+    await getDocs(collection(doc(db, "stores", storeId), "billboards"))
   ).docs.map((doc) => doc.data()) as Billboards[]
 
 

@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase";
-import { Category, Size } from "@/types-db";
+import { Size } from "@/types-db";
 import { auth } from "@clerk/nextjs/server";
 import { deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
@@ -32,7 +32,7 @@ export const PATCH = async (req : Request,
         const store = await getDoc(doc(db, "stores", params.storeId))
 
         if(store.exists()){
-            let storeData = store.data()
+            const storeData = store.data()
             if(storeData?.userId !== userId){
                 return new NextResponse("Un-Authorized Access")
             }
@@ -91,7 +91,7 @@ export const DELETE = async (req : Request,
         const store = await getDoc(doc(db, "stores", params.storeId))
 
         if(store.exists()){
-            let storeData = store.data()
+            const storeData = store.data()
             if(storeData?.userId !== userId){
                 return new NextResponse("Un-Authorized Access")
             }

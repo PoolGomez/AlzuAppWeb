@@ -36,7 +36,7 @@ export const PATCH = async (req : Request,
         const store = await getDoc(doc(db, "stores", params.storeId))
 
         if(store.exists()){
-            let storeData = store.data()
+            const storeData = store.data()
             if(storeData?.userId !== userId){
                 return new NextResponse("Un-Authorized Access")
             }
@@ -95,7 +95,7 @@ export const DELETE = async (req : Request,
         const store = await getDoc(doc(db, "stores", params.storeId))
 
         if(store.exists()){
-            let storeData = store.data()
+            const storeData = store.data()
             if(storeData?.userId !== userId){
                 return new NextResponse("Un-Authorized Access")
             }

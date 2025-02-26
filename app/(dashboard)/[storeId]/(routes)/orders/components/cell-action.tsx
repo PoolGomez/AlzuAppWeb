@@ -7,8 +7,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Button } from "@/components/ui/button"
 import { Copy, Edit, MoreVertical, Trash } from "lucide-react"
 import toast from "react-hot-toast"
-import { deleteObject, ref } from "firebase/storage"
-import { storage } from "@/lib/firebase"
 import axios from "axios"
 import { AlertModal } from "@/components/modal/alert-modal"
 
@@ -40,6 +38,7 @@ export const CellAction = ({data}:CellActionProps) => {
           location.reload()
           router.push(`/${params.storeId}/orders`);
         } catch (error) {
+            console.log(error);
           toast.error("Something went wrong");
         } finally {
           setIsLoading(false);
@@ -47,7 +46,10 @@ export const CellAction = ({data}:CellActionProps) => {
         }
     };
 
-    const onUpdate = async (data: any) => {
+    const onUpdate = async (data: {
+        id: string,
+        order_status: string,
+    }) => {
         try {
             setIsLoading(true);
             await axios.patch(`/api/${params.storeId}/orders/${data.id}`, data)
@@ -55,6 +57,7 @@ export const CellAction = ({data}:CellActionProps) => {
             router.push(`/${params.storeId}/orders`)
             toast.success("Order Updated")
         } catch (error) {
+            console.log(error);
             toast.error("Something Went Wrong");
         }finally{
             router.refresh()

@@ -118,6 +118,7 @@ export const ProductForm = ({
       location.reload()
       router.push(`/${params.storeId}/products`);
     } catch (error) {
+      console.log(error);
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
@@ -350,7 +351,7 @@ export const ProductForm = ({
                   <FormControl>
                     <Checkbox
                       checked={field.value}
-                      // @ts-ignore
+                      
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
@@ -373,7 +374,6 @@ export const ProductForm = ({
                   <FormControl>
                     <Checkbox
                       checked={field.value}
-                      // @ts-ignore
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
@@ -389,7 +389,7 @@ export const ProductForm = ({
           </div>
 
           <Button disabled={isLoading} type="submit" size={"sm"}>
-            Save Changes
+            {action}
           </Button>
         </form>
       </Form>

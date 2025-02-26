@@ -6,14 +6,15 @@ import { SizeForm } from "./components/order-form";
 const SizePage = async ({
   params,
 }: {
-  params: {
+  params: Promise<{
     storeId: string;
     sizeId: string;
-  };
+  }>
 }) => {
+  const {storeId, sizeId} = await params;
   const size = (
     await getDoc(
-      doc(db, "stores", params.storeId, "sizes", params.sizeId)
+      doc(db, "stores", storeId, "sizes", sizeId)
     )
   ).data() as Size;
 

@@ -7,11 +7,11 @@ import { OrderClient } from "./components/client";
 import { formatter } from "@/lib/utils";
 
 
-const OrdersPage = async ({params}:{params:{storeId: string}}) => {
-
+const OrdersPage = async ({params}:{params:Promise<{storeId: string}>}) => {
+    const {storeId} = await params;
     const ordersData = (
         await getDocs(
-            collection(doc(db, "stores", params.storeId), "orders")
+            collection(doc(db, "stores", storeId), "orders")
         )
     ).docs.map(doc => doc.data()) as Order[];
 

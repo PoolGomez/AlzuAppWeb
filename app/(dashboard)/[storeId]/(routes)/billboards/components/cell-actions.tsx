@@ -42,6 +42,7 @@ export const CellAction = ({data}:CellActionProps) => {
             router.push(`/${params.storeId}/billboards`);
             toast.success("Billboard Removed");
         } catch (error) {
+            console.log(error)
             toast.error("Something went wrong")
         }finally{
             setIsLoading(false)

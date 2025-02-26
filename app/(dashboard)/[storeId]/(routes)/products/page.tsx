@@ -1,17 +1,18 @@
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Product, Size } from "@/types-db";
+import { Product } from "@/types-db";
 import { format } from "date-fns"
 import { ProductColumns } from "./components/columns";
 import { ProductClient } from "./components/client";
 import { formatter } from "@/lib/utils";
 
 
-const ProductsPage = async ({params}:{params:{storeId: string}}) => {
+const ProductsPage = async ({params}:{params:Promise<{storeId: string}>}) => {
 
+    const {storeId} = await params;
     const productsData = (
         await getDocs(
-            collection(doc(db, "stores", params.storeId), "products")
+            collection(doc(db, "stores", storeId), "products")
         )
     ).docs.map(doc => doc.data()) as Product[];
 

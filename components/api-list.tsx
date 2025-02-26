@@ -1,7 +1,7 @@
 "use client"
 
 import { useOrigin } from "@/hooks/use-origin";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { ApiAlert } from "./api-alert";
 
 interface ApiListProps {
@@ -11,7 +11,7 @@ interface ApiListProps {
 
 const ApiList = ({entityName, entityNameId}: ApiListProps) => {
 
-    const router = useRouter()
+    // const router = useRouter()
     const origin = useOrigin()
     const params = useParams()
 

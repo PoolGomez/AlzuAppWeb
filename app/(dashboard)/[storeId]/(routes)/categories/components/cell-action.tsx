@@ -7,8 +7,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Button } from "@/components/ui/button"
 import { Copy, Edit, MoreVertical, Trash } from "lucide-react"
 import toast from "react-hot-toast"
-import { deleteObject, ref } from "firebase/storage"
-import { storage } from "@/lib/firebase"
 import axios from "axios"
 import { AlertModal } from "@/components/modal/alert-modal"
 
@@ -40,6 +38,7 @@ export const CellAction = ({data}:CellActionProps) => {
           location.reload()
           router.push(`/${params.storeId}/categories`);
         } catch (error) {
+            console.log(error);
           toast.error("Something went wrong");
         } finally {
           setIsLoading(false);

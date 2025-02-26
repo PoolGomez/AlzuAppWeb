@@ -1,16 +1,16 @@
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Category, Size } from "@/types-db";
+import { Size } from "@/types-db";
 import { format } from "date-fns"
 import { SizeColumns } from "./components/columns";
 import { SizeClient } from "./components/client";
 
 
-const SizesPage = async ({params}:{params:{storeId: string}}) => {
-
+const SizesPage = async ({params}:{params:Promise<{storeId: string}>}) => {
+    const {storeId}= await params;
     const sizesData = (
         await getDocs(
-            collection(doc(db, "stores", params.storeId), "sizes")
+            collection(doc(db, "stores", storeId), "sizes")
         )
     ).docs.map(doc => doc.data()) as Size[];
 

@@ -48,7 +48,7 @@ export const POST = async (req : Request,
         const store = await getDoc(doc(db, "stores", params.storeId))
 
         if(store.exists()){
-            let storeData = store.data()
+            const storeData = store.data()
             if(storeData?.userId !== userId){
                 return new NextResponse("Un-Authorized Access",{status: 500})
             }
@@ -110,7 +110,7 @@ export const GET = async (req : Request,
 
         let productQuery
 
-        let queryContraints = []
+        const queryContraints = []
 
         // construct the query based on the searchParameters
         if(searchParams.has("size")){

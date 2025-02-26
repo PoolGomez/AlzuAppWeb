@@ -85,6 +85,7 @@ export const SizeForm = ({
       router.refresh();
       router.push(`/${params.storeId}/sizes`);
     } catch (error) {
+      console.log(error);
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
@@ -160,7 +161,7 @@ export const SizeForm = ({
           </div>
 
           <Button disabled={isLoading} type="submit" size={"sm"}>
-            Save Changes
+            {action}
           </Button>
         </form>
       </Form>

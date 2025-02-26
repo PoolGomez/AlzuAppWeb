@@ -5,11 +5,11 @@ import { Billboards } from "@/types-db";
 import { BillboardColumns } from "./components/columns";
 import { format } from "date-fns"
 
-const BillboardsPage = async ({params}:{params:{storeId: string}}) => {
-
+const BillboardsPage = async ({params}:{params:Promise<{storeId: string}>}) => {
+    const storeId = (await params).storeId;
     const billboardsData = (
         await getDocs(
-            collection(doc(db, "stores", params.storeId), "billboards")
+            collection(doc(db, "stores", storeId), "billboards")
         )
     ).docs.map(doc => doc.data()) as Billboards[];
 

@@ -3,9 +3,15 @@
 import { cn } from "@/lib/utils";
 import { Check, Store } from "lucide-react";
 
+
+interface StoreItem {
+  label : string,
+  value : string,
+}
+
 interface StoreListItemProps {
-  store: any;
-  onSelect: (store: any) => void;
+  store: StoreItem;
+  onSelect: (store: StoreItem) => void;
   isChecked: boolean;
 }
 

@@ -10,14 +10,14 @@ import { PuffLoader } from "react-spinners"
 import { Button } from "./ui/button";
 
 interface ImagesUploadProps {
-    disabled? : boolean;
+    // disabled? : boolean;
     onChange : (value: string[]) => void;
     onRemove : (value:string) => void;
     value: string[];
 }
 
 const ImagesUpload = ({
-    disabled,
+    // disabled,
     onChange,
     onRemove,
     value,

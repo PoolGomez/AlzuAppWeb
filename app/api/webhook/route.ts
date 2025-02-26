@@ -19,7 +19,7 @@ export const POST = async (req: Request) => {
             signature,
             process.env.STRIPE_WEBHOOK_SECRET!
         )
-    } catch (error: any) {
+    } catch (error) {
         return new NextResponse(`WEBHOOK Error : ${(error as Error)?.message}`)
     }
 
