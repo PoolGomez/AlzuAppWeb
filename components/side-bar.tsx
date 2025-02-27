@@ -43,8 +43,8 @@ export const SideBar = async(
 
     return ( 
         <SidebarProvider>
-        <Sidebar collapsible="icon" className="pt-8">
-          <SidebarHeader>
+        <Sidebar collapsible="icon" className="pt-12">
+          {/* <SidebarHeader> */}
 
             {/* <SidebarMenu>
               <SidebarMenuItem>
@@ -103,7 +103,7 @@ export const SideBar = async(
 
             {/* <StoreSwitcher items={stores} /> */}
 
-          </SidebarHeader>
+          {/* </SidebarHeader> */}
 
           <SidebarContent>
           
@@ -211,7 +211,7 @@ export const SideBar = async(
         <SidebarInset>
           <header 
             // className="fixed flex h-16 shrink-0 items-center justify-between  gap-2 pr-2 gap-x-4 md:pr-6 border-b transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
-            className="fixed top-0 left-0 w-full z-50 flex h-12 shrink-0 items-center justify-between gap-2 pr-2 gap-x-4 md:pr-6 border-b transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-white"
+            className="fixed top-0 left-0 w-full z-50 flex h-12 shrink-0 items-center justify-between gap-2 pr-2 gap-x-4 md:pr-6 border-b transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-background"
           >
             <div 
             
