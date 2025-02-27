@@ -3,13 +3,13 @@ import { auth } from "@clerk/nextjs/server";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { redirect } from "next/navigation";
 import { Store } from "@/types-db"
-import { Navbar } from "@/components/navbar";
+import { SideBar } from "@/components/side-bar";
 
 
 
 interface DashboardLayout{
     children : React.ReactNode,
-    params : { storeId : string }
+    params :Promise<{ storeId : string }>
 }
 
 const DashboardLayout = async ({children, params}: DashboardLayout) => {
@@ -38,9 +38,11 @@ const DashboardLayout = async ({children, params}: DashboardLayout) => {
 
     return (
         <>
-        <Navbar />
-        {/* {params.storeId} */}
-        {children}
+        {/* <Navbar /> */}
+        <SideBar>
+        {children}    
+        </SideBar>
+        {/* {children} */}
         </>
     )
 }

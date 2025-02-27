@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-// import { useOrigin } from "@/hooks/use-origin"
 import { storage } from "@/lib/firebase"
 import { Billboards } from "@/types-db"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -40,7 +39,6 @@ export const BillboardForm = ({initialData}: BillboardFormProps) => {
     const [open, setOpen] = useState(false)
     const params = useParams()
     const router = useRouter()
-    // const origin = useOrigin()
 
     const title = initialData ? "Edit Billboard" : "Create Billboard";
     const description = initialData ? "Edit a billboard":"Add new billboard";

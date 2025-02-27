@@ -4,11 +4,12 @@ import "./globals.css";
 import { ToastProvider } from "@/components/modal/toast-provider";
 import { ModalProvider } from "@/providers/modal-provider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "next-themes";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight:["100","200","300","400","500","600","700","800","900"]
-})
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Multi-Store Admin Portal",
@@ -22,16 +23,25 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en">
-      <body
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        className={poppins.className}
-      >
-        <ModalProvider />
-        <ToastProvider />
-        {children}
-      </body>
-    </html>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={poppins.className}
+        >
+          
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ModalProvider />
+            <ToastProvider />
+            
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

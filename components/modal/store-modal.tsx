@@ -1,5 +1,4 @@
 "use client"
-//2:14
 import { useStoreModal } from "@/hooks/use-store-modal"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
@@ -76,7 +75,7 @@ export const StoreModal = () => {
                                 )}
                             />
                             <div className="pt-6 space-x-2 flex items-center justify-end w-full">
-                                <Button disabled={isLoading} type="button"  variant={"outline"} size={"sm"}>Cancel</Button>
+                                <Button disabled={isLoading} type="button"  variant={"outline"} size={"sm"} onClick={storeModal.onClose}>Cancel</Button>
                                 <Button disabled={isLoading} type="submit" size={"sm"}>Continue</Button>
                             </div>
                         </form>

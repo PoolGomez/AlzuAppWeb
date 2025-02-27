@@ -19,7 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-// import { useOrigin } from "@/hooks/use-origin";
 import { Billboards, Category } from "@/types-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -53,7 +52,6 @@ export const CategoryForm = ({
   const [open, setOpen] = useState(false);
   const params = useParams();
   const router = useRouter();
-  // const origin = useOrigin();
 
   const title = initialData ? "Edit Category" : "Create Category";
   const description = initialData ? "Edit a Category" : "Add new Category";
