@@ -8,6 +8,7 @@ export const PATCH = async (req : Request,
     {params}:{params:Promise<{storeId: string, billboardId: string}>}
 ) => {
     try {
+        console.log("API_PATCH_BILLBOARD")
         const {storeId, billboardId} = await params;
         const {userId} = await auth()
         const body = await req.json()

@@ -68,6 +68,7 @@ export const GET = async (req : Request,
     {params}:{params:Promise<{storeId: string}>}
 ) => {
     try {
+        console.log("API SSS")
         const {storeId} = await params;
         if(!storeId){
             return new NextResponse("Store Id is missing",{status:400})

@@ -96,7 +96,7 @@ export function StoreSwitcher({ items }: StoreSwitcherProps) {
                     {formattedStores?.map((item, index) => (
                         <StoreListItem
                             store={item}
-                            key={index}
+                            key={`${index}-${item.value}`}
                             onSelect={onStoreSelect}
                             isChecked={currentStore?.value === item.value}
                         />

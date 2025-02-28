@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "../ui/button"
 import toast from "react-hot-toast"
 import { Modal } from "@/components/modal"
+import { DatabaseStoreRepository } from "@/src/infrastructure/database/repositories/DatabaseStoreRepository"
+import { CreateStore } from "@/src/application/useCases/stores/CreateStore"
 
 const formSchema = z.object({
     name : z
@@ -21,6 +23,10 @@ const formSchema = z.object({
 
 
 export const StoreModal = () => {
+    const storeRepo = new DatabaseStoreRepository();
+    const useCase = new CreateStore(storeRepo);
+
+
     const storeModal = useStoreModal();
 
     const [isLoading, setIsLoading] = useState(false)
@@ -35,9 +41,13 @@ export const StoreModal = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             setIsLoading(true)
-            const response = await axios.post("/api/stores", values);
+
+            // const response = await axios.post("/api/stores", values);         
+             const newStore = await useCase.execute(values.name);
+
             toast.success("Store Created")
-            window.location.assign(`/${response.data.id}`)
+            // window.location.assign(`/${response.data.id}`)
+            window.location.assign(`/${newStore.id}`)
         } catch (error) {
             console.log(error)
             toast.error("Something went wrong")

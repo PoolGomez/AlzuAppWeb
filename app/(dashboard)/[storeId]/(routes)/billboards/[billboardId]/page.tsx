@@ -20,11 +20,18 @@ const BillboardPage = async (
         // const {storeId,billboardId } = await params;
         const storeId = (await params).storeId;
         const billboardId = (await params).billboardId;
-        const billboard = (await getDoc(doc(db,"stores", storeId, "billboards", billboardId ))).data() as Billboards
+        const billboard = (await getDoc(doc(db,"stores", storeId, "billboards", billboardId ))).data() as Billboards;
+        const parseBillboardData = (data:Billboards) => {
+            return {
+              id: data.id,
+              label : data.label,
+              imageUrl : data.imageUrl,
+            }
+          }
     return ( 
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">
-                <BillboardForm initialData = {billboard} />
+                <BillboardForm initialData = {parseBillboardData(billboard)} />
             </div>
            
         </div>

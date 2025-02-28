@@ -4,11 +4,13 @@ import { ToggleTheme } from "./toggle-theme";
 import { StoreSwitcher } from "./store-switcher";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { Store } from "@/types-db";
+// import { collection, getDocs, query, where } from "firebase/firestore";
+// import { db } from "@/lib/firebase";
+// import { Store } from "@/types-db";
 import { SideNav } from "./side-nav";
 import { UserButton } from "@clerk/nextjs";
+import { DatabaseStoreRepository } from "@/src/infrastructure/database/repositories/DatabaseStoreRepository";
+import { GetStoresByUserId } from "@/src/application/useCases/stores/GetStoresByUserId";
 
 export const SideBar = async(
     {children}:{children: React.ReactNode}
@@ -20,26 +22,22 @@ export const SideBar = async(
         redirect("/sign-in")
     }
 
-    const storeSnap = await getDocs(
-        query(collection(db, "stores"), where("userId", "==", userId))
-    )
+    // const storeSnap = await getDocs(
+    //     query(collection(db, "stores"), where("userId", "==", userId))
+    // )
+    // const stores = [] as Store[];
+    // storeSnap.forEach(doc => {
+    //     const dat = doc.data()
+    //     stores.push({
+    //         id: dat.id,
+    //         name: dat.name,
+    //         userId: dat.userId,
+    //     });
+    // })
 
-    const stores = [] as Store[];
-
-
-    storeSnap.forEach(doc => {
-        const dat = doc.data()
-        stores.push({
-            id: dat.id,
-            name: dat.name,
-            userId: dat.userId,
-            // createdAt: dat.createdAt,
-            // updateAt: dat.updateAt,
-        }
-            // doc.data() as Store
-            
-        );
-    })
+    const storeRepo = new DatabaseStoreRepository();
+    const useCase = new GetStoresByUserId(storeRepo);
+    const stores = await useCase.execute(userId);
 
     return ( 
         <SidebarProvider>
