@@ -32,6 +32,14 @@ export interface Size {
     createdAt? : Timestamp;
     updateAt? : Timestamp;
 }
+export interface Room {
+    id: string;
+    name: string;
+    // createdAt? : string;
+    // updateAt? : string;
+    createdAt? : Timestamp;
+    updateAt? : Timestamp;
+}
 
 export interface Kitchen {
     id: string;
