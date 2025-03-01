@@ -1,10 +1,10 @@
 import { Store } from "@/src/domain/entities/Store";
 import { StoreRepository } from "@/src/domain/repositories/StoreRepository";
 
-export class GetStoresByUserId {
+export class GetStoreById {
     constructor(private storeRepository: StoreRepository) {}
   
-    async execute(userId: string): Promise<Store[]> {
-      return this.storeRepository.getByUserId(userId);
+    async execute(userId: string): Promise<Store | null> {
+      return this.storeRepository.getById(userId);
     }
   }

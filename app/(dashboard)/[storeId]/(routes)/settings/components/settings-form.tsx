@@ -1,5 +1,6 @@
 "use client"
 
+import { deleteStoreAction, updateStoreAction } from "@/actions/storeActions"
 import { ApiAlert } from "@/components/api-alert"
 import { Heading } from "@/components/heading"
 import { AlertModal } from "@/components/modal/alert-modal"
@@ -44,7 +45,16 @@ export const SettingsForm = ({initialData}: SettingsFormProps) => {
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             setIsLoading(true)
-            await axios.patch(`/api/stores/${params.storeId}`, data);
+            // await axios.patch(`/api/${params.storeId}`, {name: data.name});
+            
+            await updateStoreAction(
+                `${params.storeId}`,
+                // "MDq4XHczWL7Ovx8RufeV",
+                // {
+                //     name: data.name
+                // }
+                data
+            )
             toast.success("Store Updated")
             router.refresh();
         } catch (error) {
@@ -58,12 +68,14 @@ export const SettingsForm = ({initialData}: SettingsFormProps) => {
     const onDelete = async()=>{
         try {
             setIsLoading(true)
-            await axios.delete(`/api/stores/${params.storeId}`);
+            console.log("Store ID:", params.storeId);
+            // await axios.delete(`/api/${params.storeId}`);
+            await deleteStoreAction(`${params.storeId}`)
             toast.success("Store Removed")
             router.refresh();
             router.push("/")
         } catch (error) {
-            console.log(error)
+            console.log("Error deleting store:", error)
             toast.error("Something went wrong")
         }finally{
             setIsLoading(false)

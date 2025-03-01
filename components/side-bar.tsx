@@ -4,13 +4,9 @@ import { ToggleTheme } from "./toggle-theme";
 import { StoreSwitcher } from "./store-switcher";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-// import { collection, getDocs, query, where } from "firebase/firestore";
-// import { db } from "@/lib/firebase";
-// import { Store } from "@/types-db";
 import { SideNav } from "./side-nav";
 import { UserButton } from "@clerk/nextjs";
-import { DatabaseStoreRepository } from "@/src/infrastructure/database/repositories/DatabaseStoreRepository";
-import { GetStoresByUserId } from "@/src/application/useCases/stores/GetStoresByUserId";
+import { getStoresByUserId } from "@/actions/storeActions";
 
 export const SideBar = async(
     {children}:{children: React.ReactNode}
@@ -35,9 +31,7 @@ export const SideBar = async(
     //     });
     // })
 
-    const storeRepo = new DatabaseStoreRepository();
-    const useCase = new GetStoresByUserId(storeRepo);
-    const stores = await useCase.execute(userId);
+    const stores = await getStoresByUserId(userId)
 
     return ( 
         <SidebarProvider>

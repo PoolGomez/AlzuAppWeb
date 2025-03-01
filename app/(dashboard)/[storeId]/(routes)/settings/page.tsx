@@ -1,9 +1,8 @@
-import { db } from "@/lib/firebase";
-import { Store } from "@/types-db";
+
 import { auth } from "@clerk/nextjs/server";
-import { doc, getDoc } from "firebase/firestore";
 import { redirect } from "next/navigation";
 import { SettingsForm } from "./components/settings-form";
+import { getStoreById } from "@/actions/storeActions";
 
 interface SettingPageProps {
     params : Promise<{
@@ -19,7 +18,8 @@ const SettingsPage = async ({params}:SettingPageProps) => {
         redirect("/sign-in")
     }
 
-    const store = (await getDoc(doc(db, "stores", storeId))).data() as Store
+    // const store = (await getDoc(doc(db, "stores", storeId))).data() as Store
+    const store = await getStoreById(storeId)
 
     if(!store || store.userId !== userId){
         redirect("/")

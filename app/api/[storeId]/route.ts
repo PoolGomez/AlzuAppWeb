@@ -41,7 +41,9 @@ export const PATCH = async ( req : Request,
     }
 }
 
-export const DELETE = async ( req : Request,{params}:{params:Promise<{storeId: string}>} ) => {
+export const DELETE = async ( 
+    req : Request,
+    {params}:{params:Promise<{storeId: string}>} ) => {
     try {
         const {storeId} = await params;
         const {userId} = await auth()
@@ -53,7 +55,7 @@ export const DELETE = async ( req : Request,{params}:{params:Promise<{storeId: s
         if(!storeId){
             return new NextResponse("Store Id is Required",{status:400})
         }
-
+        console.log("api delete: ", storeId)
         const docRef = doc(db, "stores", storeId)
 
         //TODO: Delete all the subcollections- and along with those data file un
@@ -165,8 +167,11 @@ export const DELETE = async ( req : Request,{params}:{params:Promise<{storeId: s
 
         return NextResponse.json({msg: "Store and all of its sub-collection deleted"});
 
-    } catch (error) {
-        console.log(`STORES_DELETE:${error}`)
+    } catch (error:any) {
+        console.log(`STORES_DELETE: ${error.message}`, error)
         return new NextResponse("Internal Server Error", { status : 500 })
     }
 }
+
+
+
