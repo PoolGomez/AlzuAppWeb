@@ -3,7 +3,6 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/modal/toast-provider";
 import { ModalProvider } from "@/providers/modal-provider";
-import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "next-themes";
 
 const poppins = Poppins({
@@ -22,7 +21,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
           // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -42,6 +40,5 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
-    </ClerkProvider>
   );
 }

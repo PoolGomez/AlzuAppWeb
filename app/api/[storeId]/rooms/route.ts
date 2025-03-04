@@ -1,20 +1,20 @@
 import { db } from "@/lib/firebase";
 import { Room } from "@/types-db";
-import { auth } from "@clerk/nextjs/server";
 import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
-import { format } from "date-fns"
+// import { format } from "date-fns"
+import { auth } from "@/auth";
 
 export const POST = async (req : Request,
     {params}:{params:Promise<{storeId: string}>}
 ) => {
     try {
         const {storeId} = await params;
-        const {userId} = await auth()
+        const session = await auth()
         const body = await req.json()
 
-        if(!userId){
+        if(!session){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
@@ -32,7 +32,7 @@ export const POST = async (req : Request,
 
         if(store.exists()){
             const storeData = store.data()
-            if(storeData?.userId !== userId){
+            if(storeData?.userId !== session.user.email){
                 return new NextResponse("Un-Authorized Access",{status: 500})
             }
         }

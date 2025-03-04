@@ -1,6 +1,6 @@
+import { auth } from "@/auth"
 import { db, storage } from "@/lib/firebase"
 import { Store } from "@/types-db"
-import { auth } from "@clerk/nextjs/server"
 import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import { NextResponse } from "next/server"
@@ -10,10 +10,10 @@ export const PATCH = async ( req : Request,
 ) => {
     try {
         const {storeId} = await params;
-        const {userId} = await auth()
+        const session = await auth()
         const body = await req.json()
 
-        if(!userId){
+        if(!session){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
@@ -46,9 +46,9 @@ export const DELETE = async (
     {params}:{params:Promise<{storeId: string}>} ) => {
     try {
         const {storeId} = await params;
-        const {userId} = await auth()
+        const session = await auth()
 
-        if(!userId){
+        if(!session){
             return new NextResponse("Un-Authorized",{status:400})
         }
 

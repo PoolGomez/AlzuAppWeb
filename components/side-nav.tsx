@@ -19,67 +19,67 @@ export const SideNav = (
 
     const routes =[
         {
-            href : `/${params.storeId}`,
+            href : `/alzu/${params.storeId}`,
             label :"Overview",
             active : pathname === `/${params.storeId}`,
             icon: LayoutDashboard
         },
         {
-            href : `/${params.storeId}/billboards`,
+            href : `/alzu/${params.storeId}/billboards`,
             label :"Billboards",
             active : pathname === `/${params.storeId}/billboards`,
             icon: LayoutDashboard
         },
         {
-            href : `/${params.storeId}/categories`,
+            href : `/alzu/${params.storeId}/categories`,
             label :"Categories",
             active : pathname === `/${params.storeId}/categories`,
             icon: FolderOpen
         },
         {
-            href : `/${params.storeId}/sizes`,
+            href : `/alzu/${params.storeId}/sizes`,
             label :"Sizes",
             active : pathname === `/${params.storeId}/sizes`,
             icon: Ruler
         },
         {
-            href : `/${params.storeId}/kitchens`,
+            href : `/alzu/${params.storeId}/kitchens`,
             label :"Kitchens",
             active : pathname === `/${params.storeId}/kitchens`,
             icon: HandPlatter
         },
         {
-            href : `/${params.storeId}/cuisines`,
+            href : `/alzu/${params.storeId}/cuisines`,
             label :"Cuisines",
             active : pathname === `/${params.storeId}/cuisines`,
             icon: HandPlatter
         },
         {
-            href : `/${params.storeId}/products`,
+            href : `/alzu/${params.storeId}/products`,
             label :"Products",
             active : pathname === `/${params.storeId}/products`,
             icon: Salad
         },
         {
-            href : `/${params.storeId}/orders`,
+            href : `/alzu/${params.storeId}/orders`,
             label :"Orders",
             active : pathname === `/${params.storeId}/orders`,
             icon: HandPlatter
         },
         {
-            href : `/${params.storeId}/settings`,
+            href : `/alzu/${params.storeId}/settings`,
             label :"Settings",
             active : pathname === `/${params.storeId}/settings`,
             icon: Wrench
         },
         {
-            href : `/${params.storeId}/rooms`,
+            href : `/alzu/${params.storeId}/rooms`,
             label :"Rooms",
             active : pathname === `/${params.storeId}/rooms`,
             icon: Grid
         },
         {
-            href : `/${params.storeId}/tables`,
+            href : `/alzu/${params.storeId}/tables`,
             label :"Tables",
             active : pathname === `/${params.storeId}/tables`,
             icon: Armchair

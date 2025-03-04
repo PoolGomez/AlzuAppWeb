@@ -1,6 +1,6 @@
+import { auth } from "@/auth";
 import { db, storage } from "@/lib/firebase";
 import { Product } from "@/types-db";
-import { auth } from "@clerk/nextjs/server";
 import { deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import { NextResponse } from "next/server";
@@ -10,10 +10,10 @@ export const PATCH = async (req : Request,
 ) => {
     try {
         const {storeId, productId} = await params;
-        const {userId} = await auth()
+        const session = await auth()
         const body = await req.json()
 
-        if(!userId){
+        if(!session){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
@@ -51,7 +51,7 @@ export const PATCH = async (req : Request,
 
         if(store.exists()){
             const storeData = store.data()
-            if(storeData?.userId !== userId){
+            if(storeData?.userId !== session.user.email){
                 return new NextResponse("Un-Authorized Access")
             }
         }
@@ -98,9 +98,9 @@ export const DELETE = async (req : Request,
 ) => {
     try {
         const {storeId, productId} = await params;
-        const {userId} = await auth()
+        const session = await auth()
 
-        if(!userId){
+        if(!session){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
@@ -116,7 +116,7 @@ export const DELETE = async (req : Request,
 
         if(store.exists()){
             const storeData = store.data()
-            if(storeData?.userId !== userId){
+            if(storeData?.userId !== session.user.email){
                 return new NextResponse("Un-Authorized Access")
             }
         }

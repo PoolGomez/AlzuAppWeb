@@ -1,6 +1,6 @@
+import { auth } from "@/auth";
 import { db } from "@/lib/firebase";
 import { Billboards } from "@/types-db";
-import { auth } from "@clerk/nextjs/server";
 import { deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
@@ -8,12 +8,11 @@ export const PATCH = async (req : Request,
     {params}:{params:Promise<{storeId: string, billboardId: string}>}
 ) => {
     try {
-        console.log("API_PATCH_BILLBOARD")
         const {storeId, billboardId} = await params;
-        const {userId} = await auth()
+        const session = await auth()
         const body = await req.json()
 
-        if(!userId){
+        if(!session){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
@@ -39,7 +38,7 @@ export const PATCH = async (req : Request,
 
         if(store.exists()){
             const storeData = store.data()
-            if(storeData?.userId !== userId){
+            if(storeData?.userId !== session.user.email){
                 return new NextResponse("Un-Authorized Access")
             }
         }
@@ -81,9 +80,9 @@ export const DELETE = async (req : Request,
 ) => {
     try {
         const {storeId, billboardId} = await params;
-        const {userId} = await auth()
+        const session = await auth()
 
-        if(!userId){
+        if(!session){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
@@ -99,7 +98,7 @@ export const DELETE = async (req : Request,
 
         if(store.exists()){
             const storeData = store.data()
-            if(storeData?.userId !== userId){
+            if(storeData?.userId !== session.user.email){
                 return new NextResponse("Un-Authorized Access")
             }
         }

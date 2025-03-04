@@ -1,23 +1,21 @@
-import { UserButton } from "@clerk/nextjs";
-
 import { StoreSwitcher } from "@/components/store-switcher";
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Store } from "@/types-db";
 import { MainNav } from "./main-nav";
+import { auth } from "@/auth";
 
 export const Navbar = async () => {
 
-    const {userId} = await auth();
+    const session = await auth();
 
-    if(!userId){
-        redirect("/sign-in")
+    if(!session){
+        redirect("/login")
     }
 
     const storeSnap = await getDocs(
-        query(collection(db, "stores"), where("userId", "==", userId))
+        query(collection(db, "stores"), where("userId", "==", session.user.email))
     )
 
     const stores = [] as Store[];
@@ -47,7 +45,8 @@ export const Navbar = async () => {
 
                 {/* userprofile */}
                 <div className="ml-auto">
-                    <UserButton afterSwitchSessionUrl="/" />
+                    {session.user.email}
+                    {/* <UserButton afterSwitchSessionUrl="/" /> */}
                 </div>
             </div>
         </div>

@@ -1,14 +1,14 @@
+import { auth } from "@/auth"
 import { db } from "@/lib/firebase"
-import { auth } from "@clerk/nextjs/server"
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore"
 import { NextResponse } from "next/server"
 
 export const POST = async ( req : Request ) => {
     try {
-        const {userId} = await auth()
+        const session = await auth()
         const body = await req.json()
 
-        if(!userId){
+        if(!session){
             return new NextResponse("Un-Authorized",{status:400})
         }
 
@@ -20,7 +20,7 @@ export const POST = async ( req : Request ) => {
 
         const storeData = {
             name,
-            userId,
+            userId: session.user.email,
             createdAt : serverTimestamp()
         }
 

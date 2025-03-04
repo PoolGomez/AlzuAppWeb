@@ -2,20 +2,20 @@ import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarHeader
 import { Separator } from "./ui/separator";
 import { ToggleTheme } from "./toggle-theme";
 import { StoreSwitcher } from "./store-switcher";
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { SideNav } from "./side-nav";
-import { UserButton } from "@clerk/nextjs";
+// import { UserButton } from "@clerk/nextjs";
 import { getStoresByUserId } from "@/actions/storeActions";
+import { auth } from "@/auth";
 
 export const SideBar = async(
     {children}:{children: React.ReactNode}
 ) => {
     
-    const {userId} = await auth();
+    const session = await auth();
 
-    if(!userId){
-        redirect("/sign-in")
+    if(!session?.user.email){
+        redirect("/login")
     }
 
     // const storeSnap = await getDocs(
@@ -31,7 +31,7 @@ export const SideBar = async(
     //     });
     // })
 
-    const stores = await getStoresByUserId(userId)
+    const stores = await getStoresByUserId(session.user.email)
 
     return ( 
         <SidebarProvider>
@@ -217,7 +217,8 @@ export const SideBar = async(
             </div>
             <div className="flex gap-x-2 items-center">
               <ToggleTheme />
-              <UserButton />
+              {session.user.email}
+              {/* <UserButton /> */}
             </div>
           </header>
           <main className="pt-12">
