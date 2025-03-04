@@ -53,10 +53,10 @@ export const CategoryForm = ({
   const params = useParams();
   const router = useRouter();
 
-  const title = initialData ? "Edit Category" : "Create Category";
-  const description = initialData ? "Edit a Category" : "Add new Category";
-  const toastMessage = initialData ? "Category updated" : "Category Created";
-  const action = initialData ? "Save Changes" : "Create Category";
+  const title = "Edit Category" ;
+  const description = "Edit a Category";
+  const toastMessage = "Category updated";
+  const action = "Save Changes";
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -74,19 +74,17 @@ export const CategoryForm = ({
             billboardLabel: matchingBillboard?.label,
           }
         );
-      } else {
-        await axios.post(`/api/${params.storeId}/categories`, {
-          ...data,
-          billboardLabel: matchingBillboard?.label,
-        });
-      }
+      } 
+      // else {
+      //   await axios.post(`/api/${params.storeId}/categories`, {
+      //     ...data,
+      //     billboardLabel: matchingBillboard?.label,
+      //   });
+      // }
       toast.success(toastMessage);
 
       router.push(`/alzu/${params.storeId}/categories`);
 
-      // const response = await axios.post(`/api/stores/${params.storeId}/billboards`, data);
-      // toast.success("Store Updated")
-      // router.refresh();
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");

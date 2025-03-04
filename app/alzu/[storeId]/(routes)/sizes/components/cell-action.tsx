@@ -36,7 +36,7 @@ export const CellAction = ({data}:CellActionProps) => {
     
           toast.success("Size Removed");
           location.reload()
-          router.push(`/${params.storeId}/sizes`);
+          router.push(`/alzu/${params.storeId}/sizes`);
         } catch (error) {
             console.log(error);
           toast.error("Something went wrong");
@@ -70,7 +70,7 @@ export const CellAction = ({data}:CellActionProps) => {
                     Copy Id
                 </DropdownMenuItem>
 
-                <DropdownMenuItem onClick={()=> router.push(`/${params.storeId}/sizes/${data.id}`)}>
+                <DropdownMenuItem onClick={()=> router.push(`/alzu/${params.storeId}/sizes/${data.id}`)}>
                     <Edit className="h-4 w-4 mr-2" />
                     Update
                 </DropdownMenuItem>

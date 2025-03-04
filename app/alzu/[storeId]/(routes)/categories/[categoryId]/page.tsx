@@ -2,6 +2,7 @@ import { db } from "@/lib/firebase";
 import { Billboards, Category } from "@/types-db";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { CategoryForm } from "./components/category-form";
+import { redirect } from "next/navigation";
 
 const CategoryPage = async ({
   params,
@@ -18,6 +19,11 @@ const CategoryPage = async ({
       doc(db, "stores", storeId, "categories", categoryId)
     )
   ).data() as Category;
+
+  if(!category){
+    redirect(`/alzu/${storeId}/categories`)
+  }
+
   const parseCategoryData = (data:Category) => {
       return {
         id: data.id,

@@ -15,7 +15,6 @@ import { Separator } from "@/components/ui/separator";
 import { Size } from "@/types-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -31,12 +30,13 @@ const formSchema = z.object({
   value: z.string().min(1),
 });
 
-export const SizeForm = ({
-  initialData
-}: SizeFormProps) => {
+export const CreateSizeForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    defaultValues: {
+        name:"",
+        value:""
+    },
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -44,23 +44,17 @@ export const SizeForm = ({
   const params = useParams();
   const router = useRouter();
 
-  const title ="Edit Size";
-  const description = "Edit a Size" ;
-  const toastMessage = "Size updated";
-  const action = "Save Changes";
+  const title = "Create Size";
+  const description = "Add new Size";
+  const toastMessage = "Size Created";
+  const action = "Create Size";
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
 
-      // if (initialData) {
-      await axios.patch(
-        `/api/${params.storeId}/sizes/${params.sizeId}`,
-        data
-      );
-      // } else {
-      //   await axios.post(`/api/${params.storeId}/sizes`, data);
-      // }
+      await axios.post(`/api/${params.storeId}/sizes`, data);
+      
       toast.success(toastMessage);
       router.push(`/alzu/${params.storeId}/sizes`);
 
@@ -103,16 +97,7 @@ export const SizeForm = ({
       />
       <div className="flex items-center justify-center">
         <Heading title={title} description={description} />
-        {initialData && (
-          <Button
-            disabled={isLoading}
-            variant={"destructive"}
-            size={"icon"}
-            onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        )}
+        
       </div>
       <Separator />
       <Form {...form}>

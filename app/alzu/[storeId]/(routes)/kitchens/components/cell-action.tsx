@@ -70,7 +70,7 @@ export const CellAction = ({data}:CellActionProps) => {
                     Copy Id
                 </DropdownMenuItem>
 
-                <DropdownMenuItem onClick={()=> router.push(`/${params.storeId}/kitchens/${data.id}`)}>
+                <DropdownMenuItem onClick={()=> router.push(`/alzu/${params.storeId}/kitchens/${data.id}`)}>
                     <Edit className="h-4 w-4 mr-2" />
                     Update
                 </DropdownMenuItem>

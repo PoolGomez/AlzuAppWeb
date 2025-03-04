@@ -44,23 +44,20 @@ export const CuisineForm = ({
   const params = useParams();
   const router = useRouter();
 
-  const title = initialData ? "Edit Cuisine" : "Create Cuisine";
-  const description = initialData ? "Edit a Cuisine" : "Add new Cuisine";
-  const toastMessage = initialData ? "Cuisine updated" : "Cuisine Created";
-  const action = initialData ? "Save Changes" : "Create Cuisine";
+  const title = "Edit Cuisine";
+  const description = "Edit a Cuisine";
+  const toastMessage = "Cuisine updated";
+  const action = "Save Changes";
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
 
-      if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/cuisines/${params.cuisineId}`,
           data
         );
-      } else {
-        await axios.post(`/api/${params.storeId}/cuisines`, data);
-      }
+      
       toast.success(toastMessage);
       router.push(`/alzu/${params.storeId}/cuisines`);
 

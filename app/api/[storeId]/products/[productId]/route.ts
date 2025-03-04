@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { db, storage } from "@/lib/firebase";
 import { Product } from "@/types-db";
-import { deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import { NextResponse } from "next/server";
 
@@ -18,6 +18,7 @@ export const PATCH = async (req : Request,
         }
 
         const {
+            value,
             name,
             price,
             images,
@@ -30,7 +31,11 @@ export const PATCH = async (req : Request,
         } = body;
 
         if(!name){
-            return new NextResponse("Size Name is missing!",{status: 400})
+            return new NextResponse("Product Name is missing!",{status: 400})
+        }
+
+        if(!value){
+            return new NextResponse("Product Value is missing!",{status: 400})
         }
 
         if(!images || !images.length){
@@ -54,6 +59,29 @@ export const PATCH = async (req : Request,
             if(storeData?.userId !== session.user.email){
                 return new NextResponse("Un-Authorized Access")
             }
+
+            
+            const productsRef = collection(db, "stores",storeId,"products");
+            const querySnapShot = await getDocs( query(productsRef, where("value","==", value)) )
+            if(querySnapShot.size > 0){
+                let errorValue = false
+
+                querySnapShot.forEach(doc=>{
+                    console.log("doc.data().id: ",doc.data().id)
+                    console.log("productId: ", productId)
+                    if(doc.data().id !== productId){
+                        errorValue= true
+                        return
+                        // console.log("El value ya esta siendo utilizado por otro producto.")
+                        // return new NextResponse("El value ya esta siendo utilizado por otro producto.",{status: 400})
+                    }
+                })
+                if(errorValue){
+                    return new NextResponse("El value ya esta siendo utilizado por otro producto.",{status: 400})
+                }
+                // return new NextResponse("El value ya esta siendo utilizado por otro producto.",{status: 400})
+            }
+
         }
 
         const productRef = await getDoc(

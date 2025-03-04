@@ -41,7 +41,7 @@ export function StoreSwitcher({ items }: StoreSwitcherProps) {
 
   const onStoreSelect = (store: { value: string; label: string }) => {
     setOpen(false);
-    router.push(`/${store.value}`);
+    router.push(`/alzu/${store.value}`);
   };
 
   // const handleSearchTerm = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -17,6 +17,7 @@ export const POST = async (req : Request,
         }
 
         const {
+            value,
             name,
             price,
             images,
@@ -28,8 +29,12 @@ export const POST = async (req : Request,
             cuisine
         } = body;
 
+        if(!value){
+            return new NextResponse("Product Value is missing!",{status: 400})
+        }
+
         if(!name){
-            return new NextResponse("Size Name is missing!",{status: 400})
+            return new NextResponse("Product Name is missing!",{status: 400})
         }
 
         if(!images || !images.length){
@@ -37,6 +42,15 @@ export const POST = async (req : Request,
         }
         if(!category){
             return new NextResponse("Category is missing!",{status: 400})
+        }
+        if(!size){
+            return new NextResponse("Size is missing!",{status: 400})
+        }
+        if(!cuisine){
+            return new NextResponse("Cuisine is missing!",{status: 400})
+        }
+        if(!kitchen){
+            return new NextResponse("Kitchen is missing!",{status: 400})
         }
         if(!price){
             return new NextResponse("Product price is missing!",{status: 400})
@@ -53,8 +67,18 @@ export const POST = async (req : Request,
             if(storeData?.userId !== session.user.email){
                 return new NextResponse("Un-Authorized Access",{status: 500})
             }
+
+            const productsRef = collection(db, "stores",storeId,"products");
+            const querySnapShot = await getDocs( query(productsRef, where("value","==", value)) )
+            if(querySnapShot.size > 0){
+                return new NextResponse("El value ya esta siendo utilizado por otro producto.",{status: 400})
+            }
         }
+        
+
+        
         const productData = {
+            value,
             name,
             price,
             images,

@@ -16,7 +16,7 @@ export const MainNav = (
 
     const routes =[
         {
-            href : `/${params.storeId}`,
+            href : `/alzu/${params.storeId}`,
             label :"Overview",
             active : pathname === `/${params.storeId}`,
         },
@@ -26,37 +26,37 @@ export const MainNav = (
             active : pathname === `/${params.storeId}/billboards`,
         },
         {
-            href : `/${params.storeId}/categories`,
+            href : `/alzu/${params.storeId}/categories`,
             label :"Categories",
             active : pathname === `/${params.storeId}/categories`,
         },
         {
-            href : `/${params.storeId}/sizes`,
+            href : `/alzu/${params.storeId}/sizes`,
             label :"Sizes",
             active : pathname === `/${params.storeId}/sizes`,
         },
         {
-            href : `/${params.storeId}/kitchens`,
+            href : `/alzu/${params.storeId}/kitchens`,
             label :"Kitchens",
             active : pathname === `/${params.storeId}/kitchens`,
         },
         {
-            href : `/${params.storeId}/cuisines`,
+            href : `/alzu/${params.storeId}/cuisines`,
             label :"Cuisines",
             active : pathname === `/${params.storeId}/cuisines`,
         },
         {
-            href : `/${params.storeId}/products`,
+            href : `/alzu/${params.storeId}/products`,
             label :"Products",
             active : pathname === `/${params.storeId}/products`,
         },
         {
-            href : `/${params.storeId}/orders`,
+            href : `/alzu/${params.storeId}/orders`,
             label :"Orders",
             active : pathname === `/${params.storeId}/orders`,
         },
         {
-            href : `/${params.storeId}/settings`,
+            href : `/alzu/${params.storeId}/settings`,
             label :"Settings",
             active : pathname === `/${params.storeId}/settings`,
         },

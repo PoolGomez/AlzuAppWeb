@@ -1,6 +1,5 @@
 "use client";
 import { Heading } from "@/components/heading";
-import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,57 +11,44 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Size } from "@/types-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
-interface SizeFormProps {
-  initialData: Size;
-}
-
 const formSchema = z.object({
   name: z.string().min(1),
   value: z.string().min(1),
 });
 
-export const SizeForm = ({
-  initialData
-}: SizeFormProps) => {
+export const CreateKitchenForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    defaultValues: {
+        name: "",
+        value:""
+    },
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const params = useParams();
   const router = useRouter();
 
-  const title ="Edit Size";
-  const description = "Edit a Size" ;
-  const toastMessage = "Size updated";
-  const action = "Save Changes";
+  const title = "Create Kitchen";
+  const description ="Add new Kitchen";
+  const toastMessage = "Kitchen Created";
+  const action = "Create Kitchen";
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
-
-      // if (initialData) {
-      await axios.patch(
-        `/api/${params.storeId}/sizes/${params.sizeId}`,
-        data
-      );
-      // } else {
-      //   await axios.post(`/api/${params.storeId}/sizes`, data);
-      // }
+        await axios.post(`/api/${params.storeId}/kitchens`, data);
+      
       toast.success(toastMessage);
-      router.push(`/alzu/${params.storeId}/sizes`);
+      router.push(`/alzu/${params.storeId}/kitchens`);
 
     } catch (error) {
       console.log(error);
@@ -73,46 +59,11 @@ export const SizeForm = ({
     }
   };
 
-  const onDelete = async () => {
-    try {
-      setIsLoading(true);
-
-      await axios.delete(
-        `/api/${params.storeId}/sizes/${params.sizeId}`
-      );
-
-      toast.success("Size Removed");
-      router.refresh();
-      router.push(`/alzu/${params.storeId}/sizes`);
-    } catch (error) {
-      console.log(error)
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
-      setOpen(false);
-    }
-  };
-
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-        loading={isLoading}
-      />
+      
       <div className="flex items-center justify-center">
         <Heading title={title} description={description} />
-        {initialData && (
-          <Button
-            disabled={isLoading}
-            variant={"destructive"}
-            size={"icon"}
-            onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        )}
       </div>
       <Separator />
       <Form {...form}>
@@ -130,7 +81,7 @@ export const SizeForm = ({
                   <FormControl>
                     <Input
                       disabled={isLoading}
-                      placeholder="Your size name..."
+                      placeholder="Your kitchen name..."
                       {...field}
                     />
                   </FormControl>
@@ -148,7 +99,7 @@ export const SizeForm = ({
                   <FormControl>
                     <Input
                       disabled={isLoading}
-                      placeholder="Your size value..."
+                      placeholder="Your kitchen value..."
                       {...field}
                     />
                   </FormControl>

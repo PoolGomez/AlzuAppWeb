@@ -27,7 +27,7 @@ export const CuisineClient = ({data}: CuisineClientProps) => {
                 title={`Cuisines (${data.length})`} 
                 description="Manage cuisines for your store"
             />
-            <Button onClick={()=>router.push(`/${params.storeId}/cuisines/create`)}>
+            <Button onClick={()=>router.push(`/alzu/${params.storeId}/cuisines/create`)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add New
             </Button>

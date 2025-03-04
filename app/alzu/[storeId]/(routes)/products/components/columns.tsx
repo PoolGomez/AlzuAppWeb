@@ -7,6 +7,7 @@ import { CellAction } from "./cell-action";
 
 export type ProductColumns = {
   id: string;
+  value:string;
   name: string;
   price: string;
   // qty?: number;
@@ -21,6 +22,20 @@ export type ProductColumns = {
 };
 
 export const columns: ColumnDef<ProductColumns>[] = [
+  {
+    accessorKey: "value",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Value
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -63,20 +78,20 @@ export const columns: ColumnDef<ProductColumns>[] = [
     accessorKey: "kitchen",
     header: "Kitchen"
   },
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "createdAt",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Date
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     );
+  //   },
+  // },
   {
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />,

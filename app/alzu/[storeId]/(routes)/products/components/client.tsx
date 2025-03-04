@@ -27,7 +27,7 @@ export const ProductClient = ({data}: ProductClientProps) => {
                 title={`Products (${data.length})`} 
                 description="Manage products for your store"
             />
-            <Button onClick={()=>router.push(`/${params.storeId}/products/create`)}>
+            <Button onClick={()=>router.push(`/alzu/${params.storeId}/products/create`)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add New
             </Button>

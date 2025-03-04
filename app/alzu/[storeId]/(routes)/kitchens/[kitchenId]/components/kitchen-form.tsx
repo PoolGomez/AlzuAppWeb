@@ -44,10 +44,10 @@ export const KitchenForm = ({
   const params = useParams();
   const router = useRouter();
 
-  const title = initialData ? "Edit Kitchen" : "Create Kitchen";
-  const description = initialData ? "Edit a Kitchen" : "Add new Kitchen";
-  const toastMessage = initialData ? "Kitchen updated" : "Kitchen Created";
-  const action = initialData ? "Save Changes" : "Create Kitchen";
+  const title = "Edit Kitchen" ;
+  const description = "Edit a Kitchen";
+  const toastMessage = "Kitchen updated";
+  const action = "Save Changes";
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -62,7 +62,7 @@ export const KitchenForm = ({
         await axios.post(`/api/${params.storeId}/kitchens`, data);
       }
       toast.success(toastMessage);
-      router.push(`/${params.storeId}/kitchens`);
+      router.push(`/alzu/${params.storeId}/kitchens`);
 
     } catch (error) {
       console.log(error);
@@ -83,7 +83,7 @@ export const KitchenForm = ({
 
       toast.success("Kitchen Removed");
       router.refresh();
-      router.push(`/${params.storeId}/kitchens`);
+      router.push(`/alzu/${params.storeId}/kitchens`);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");

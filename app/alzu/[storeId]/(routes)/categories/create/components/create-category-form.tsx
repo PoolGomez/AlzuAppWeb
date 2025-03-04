@@ -11,8 +11,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Size } from "@/types-db";
+import { Billboards, Category } from "@/types-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Trash } from "lucide-react";
@@ -22,21 +29,26 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
-interface SizeFormProps {
-  initialData: Size;
+interface CategoryFormProps {
+//   initialData: Category;
+  billboards: Billboards[];
 }
 
 const formSchema = z.object({
   name: z.string().min(1),
-  value: z.string().min(1),
+  billboardId: z.string().min(1),
 });
 
-export const SizeForm = ({
-  initialData
-}: SizeFormProps) => {
+export const CreateCategoryForm = ({
+    // initialData,
+    billboards,
+  }: CategoryFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    defaultValues: {
+        name:"",
+        billboardId:""
+    },
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -44,26 +56,33 @@ export const SizeForm = ({
   const params = useParams();
   const router = useRouter();
 
-  const title ="Edit Size";
-  const description = "Edit a Size" ;
-  const toastMessage = "Size updated";
-  const action = "Save Changes";
+  const title = "Create Category";
+  const description = "Add new Category";
+  const toastMessage = "Category Created";
+  const action = "Create Category";
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
 
-      // if (initialData) {
-      await axios.patch(
-        `/api/${params.storeId}/sizes/${params.sizeId}`,
-        data
+      const { billboardId: formBillId} = form.getValues();
+      const matchingBillboard = billboards.find(
+        (item) => item.id === formBillId
       );
-      // } else {
-      //   await axios.post(`/api/${params.storeId}/sizes`, data);
-      // }
-      toast.success(toastMessage);
-      router.push(`/alzu/${params.storeId}/sizes`);
 
+      
+        await axios.post(`/api/${params.storeId}/categories`, {
+          ...data,
+          billboardLabel: matchingBillboard?.label,
+        });
+      
+      toast.success(toastMessage);
+
+      router.push(`/alzu/${params.storeId}/categories`);
+
+      // const response = await axios.post(`/api/stores/${params.storeId}/billboards`, data);
+      // toast.success("Store Updated")
+      // router.refresh();
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
@@ -78,14 +97,14 @@ export const SizeForm = ({
       setIsLoading(true);
 
       await axios.delete(
-        `/api/${params.storeId}/sizes/${params.sizeId}`
+        `/api/${params.storeId}/categories/${params.categoryId}`
       );
 
-      toast.success("Size Removed");
+      toast.success("Category Removed");
       router.refresh();
-      router.push(`/alzu/${params.storeId}/sizes`);
+      router.push(`/alzu/${params.storeId}/categories`);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
@@ -103,16 +122,7 @@ export const SizeForm = ({
       />
       <div className="flex items-center justify-center">
         <Heading title={title} description={description} />
-        {initialData && (
-          <Button
-            disabled={isLoading}
-            variant={"destructive"}
-            size={"icon"}
-            onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        )}
+        
       </div>
       <Separator />
       <Form {...form}>
@@ -130,7 +140,7 @@ export const SizeForm = ({
                   <FormControl>
                     <Input
                       disabled={isLoading}
-                      placeholder="Your size name..."
+                      placeholder="Your billboard name..."
                       {...field}
                     />
                   </FormControl>
@@ -141,23 +151,38 @@ export const SizeForm = ({
 
             <FormField
               control={form.control}
-              name="value"
+              name="billboardId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Value</FormLabel>
+                  <FormLabel>Billboard</FormLabel>
                   <FormControl>
-                    <Input
+                    <Select
                       disabled={isLoading}
-                      placeholder="Your size value..."
-                      {...field}
-                    />
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            defaultValue={field.value}
+                            placeholder="Select a billboard"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {billboards.map((billboard) => (
+                          <SelectItem key={billboard.id} value={billboard.id}>
+                            {billboard.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            
           </div>
 
           <Button disabled={isLoading} type="submit" size={"sm"}>

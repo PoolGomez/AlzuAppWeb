@@ -1,7 +1,7 @@
 "use client";
 import { Heading } from "@/components/heading";
 import ImagesUpload from "@/components/images-upload";
-import { AlertModal } from "@/components/modal/alert-modal";
+// import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -25,7 +25,6 @@ import { Separator } from "@/components/ui/separator";
 import { Category, Cuisine, Kitchen, Product, Size } from "@/types-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -33,7 +32,6 @@ import toast from "react-hot-toast";
 import { z } from "zod";
 
 interface ProductFormProps {
-  initialData: Product;
   categories: Category[];
   sizes: Size[];
   kitchens: Kitchen[];
@@ -53,8 +51,7 @@ const formSchema = z.object({
   kitchen: z.string().min(1),
 });
 
-export const ProductForm = ({
-  initialData,
+export const CreateProductForm = ({
   categories,
   sizes,
   kitchens,
@@ -62,7 +59,7 @@ export const ProductForm = ({
 }: ProductFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || {
+    defaultValues:  {
       value:"",
       name:"",
       price:0,
@@ -77,34 +74,37 @@ export const ProductForm = ({
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const params = useParams();
   const router = useRouter();
 
-  const title = "Edit Product";
-  const description = "Edit a Product" ;
-  const toastMessage = "Product updated";
-  const action = "Save Changes";
+  const title = "Create Product";
+  const description = "Add new Product";
+  const toastMessage = "Product Created";
+  const action = "Create Product";
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
+    
+      await axios.post(`/api/${params.storeId}/products`, data);
 
-      await axios.patch(
-        `/api/${params.storeId}/products/${params.productId}`,
-        data
-      );
+      // if(response.status === 400){
+      //   const errorMessage = await response.data
+      //   toast.error(errorMessage)
+      // }
       
       toast.success(toastMessage);
       router.push(`/alzu/${params.storeId}/products`);
     } catch (error) {
-      console.log(error);
+
       if(axios.isAxiosError(error)){
         const errorMessage = error.response?.data || "Something went wrong";
         toast.error(errorMessage);
       } else {
         toast.error("Something went wrong"); // Mensaje genérico para otros errores
       }
+
       // toast.error("Something went wrong");
     } finally {
       router.refresh();
@@ -112,45 +112,36 @@ export const ProductForm = ({
     }
   };
 
-  const onDelete = async () => {
-    try {
-      setIsLoading(true);
+  // const onDelete = async () => {
+  //   try {
+  //     setIsLoading(true);
 
-      await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
+  //     await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
 
-      toast.success("Product Removed");
-      // router.refresh();
-      location.reload()
-      router.push(`/alzu/${params.storeId}/products`);
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
-      setOpen(false);
-    }
-  };
+  //     toast.success("Product Removed");
+  //     // router.refresh();
+  //     location.reload()
+  //     router.push(`/${params.storeId}/products`);
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Something went wrong");
+  //   } finally {
+  //     setIsLoading(false);
+  //     setOpen(false);
+  //   }
+  // };
 
   return (
     <>
-      <AlertModal
+      {/* <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
         loading={isLoading}
-      />
+      /> */}
       <div className="flex items-center justify-center">
         <Heading title={title} description={description} />
-        {initialData && (
-          <Button
-            disabled={isLoading}
-            variant={"destructive"}
-            size={"icon"}
-            onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        )}
+        
       </div>
       <Separator />
       <Form {...form}>
@@ -183,8 +174,7 @@ export const ProductForm = ({
           />
 
           <div className="grid grid-cols-3 gap-8">
-
-          <FormField
+            <FormField
               control={form.control}
               name="value"
               render={({ field }) => (
@@ -193,7 +183,7 @@ export const ProductForm = ({
                   <FormControl>
                     <Input
                       disabled={isLoading}
-                      placeholder="Product name..."
+                      placeholder="Product value..."
                       {...field}
                     />
                   </FormControl>

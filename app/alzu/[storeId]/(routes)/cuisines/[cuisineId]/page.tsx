@@ -17,11 +17,19 @@ const CuisinePage = async ({
       doc(db, "stores", storeId, "cuisines", cuisineId)
     )
   ).data() as Cuisine;
-
+  
+    const parseCuisineData = (data:Cuisine) => {
+         return {
+           id: data.id,
+           name:data.name,
+           value: data.value,
+         }
+     }
+   
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <CuisineForm initialData={cuisine} />
+        <CuisineForm initialData={parseCuisineData(cuisine)} />
       </div>
     </div>
   );

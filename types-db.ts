@@ -58,6 +58,7 @@ export interface Cuisine {
 }
 export interface Product{
     id: string;
+    value: string;
     name: string;
     price: number;
     qty?: number;
